@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EZStore 雙 Agent 智慧商務系統專案報告書</title>
+  
+  <!-- Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Mermaid.js for Interactive Diagram Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4338ca;
+      --primary-hover: #3730a3;
+      --primary-light: #e0e7ff;
+      --secondary: #0ea5e9;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.8;
+      color: var(--text-main);
+      background-color: #f8fafc;
+      font-size: 15.5px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--slate-200);
+      overflow: hidden;
+      padding: 60px 70px;
+    }
+
+    /* Hero Header */
+    .hero-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
+      color: #ffffff;
+      padding: 45px 50px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 50px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-chip {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip-primary { background: rgba(99, 102, 241, 0.25); color: #a5b4fc; border: 1px solid rgba(165, 180, 252, 0.3); }
+    .chip-cyan { background: rgba(14, 165, 233, 0.25); color: #7dd3fc; border: 1px solid rgba(125, 211, 252, 0.3); }
+    .chip-indigo { background: rgba(129, 140, 248, 0.25); color: #c7d2fe; border: 1px solid rgba(199, 210, 254, 0.3); }
+    .chip-purple { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; border: 1px solid rgba(216, 180, 254, 0.3); }
+    .chip-success { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; border: 1px solid rgba(110, 231, 183, 0.4); }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-subtitle strong {
+      color: #38bdf8;
+    }
+
+    .hero-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 18px 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 11.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .meta-val {
+      font-size: 13.5px;
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .meta-link {
+      color: #60a5fa;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-link:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    .code-val {
+      font-family: 'JetBrains Mono', monospace;
+      color: #f472b6;
+      font-size: 12.5px;
+    }
+
+    .text-success {
+      color: #34d399 !important;
+    }
+
+    /* TOC (目錄) Card */
+    .toc-wrapper {
+      background: #f8fafc;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 50px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toc-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--slate-200);
+    }
+
+    .toc-icon {
+      font-size: 22px;
+    }
+
+    .toc-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--slate-800);
+    }
+
+    .toc-body ol {
+      list-style-type: none;
+      counter-reset: toc-counter;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 10px 30px;
+    }
+
+    .toc-body > ol > li {
+      counter-increment: toc-counter;
+      position: relative;
+      padding-left: 28px;
+      font-size: 14.5px;
+      font-weight: 600;
+    }
+
+    .toc-body > ol > li::before {
+      content: counter(toc-counter);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      width: 20px;
+      height: 20px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 50%;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .toc-body a {
+      color: var(--slate-700);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .toc-body a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .toc-body ul {
+      margin-top: 6px;
+      margin-bottom: 8px;
+      list-style-type: disc;
+      padding-left: 20px;
+      font-weight: 400;
+      font-size: 13.5px;
+      color: var(--slate-600);
+    }
+
+    /* Typography & Headings */
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--slate-900);
+      font-weight: 800;
+      line-height: 1.4;
+      margin-top: 40px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    h2::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 24px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      border-radius: 4px;
+    }
+
+    h3 {
+      font-size: 19px;
+      margin-top: 32px;
+      color: var(--slate-800);
+      border-left: 3px solid var(--secondary);
+      padding-left: 12px;
+    }
+
+    h4 {
+      font-size: 16.5px;
+      margin-top: 24px;
+      color: var(--slate-700);
+    }
+
+    h5 {
+      font-size: 15px;
+      margin-top: 18px;
+      color: var(--slate-700);
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: var(--slate-700);
+    }
+
+    ul, ol {
+      margin-bottom: 18px;
+      padding-left: 26px;
+      color: var(--slate-700);
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    strong {
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: var(--slate-200);
+      margin: 40px 0;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Checkpoint Pill */
+    .checkpoint-pill {
+      display: inline-flex;
+      align-items: center;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-right: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* Code & Inlines */
+    code:not(pre code) {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 13.5px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Diagram Card (Mermaid) */
+    .diagram-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      margin: 30px 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .diagram-bar {
+      background: #f8fafc;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .diagram-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .diagram-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--secondary);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 6px var(--secondary);
+    }
+
+    .diagram-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+
+    .diagram-tag {
+      font-size: 11.5px;
+      font-weight: 600;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .diagram-body {
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      overflow-x: auto;
+    }
+
+    .diagram-body .mermaid {
+      width: 100%;
+      text-align: center;
+    }
+
+    .diagram-body .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    /* Figure Card (Screenshots) */
+    .figure-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      margin: 32px 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .figure-card:hover {
+      box-shadow: var(--shadow-xl);
+    }
+
+    .figure-header {
+      background: #f8fafc;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .figure-badge {
+      font-weight: 700;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+    }
+
+    .figure-file {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--slate-400);
+    }
+
+    .figure-viewport {
+      padding: 12px;
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+    }
+
+    .figure-viewport img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-300);
+      box-shadow: var(--shadow-md);
+      display: block;
+    }
+
+    .figure-caption {
+      padding: 14px 20px;
+      background: #ffffff;
+      border-top: 1px solid var(--slate-200);
+      font-size: 14px;
+      color: var(--slate-700);
+      line-height: 1.5;
+    }
+
+    /* Terminal Console Card */
+    .terminal-card {
+      background: #0f172a;
+      border-radius: var(--radius-md);
+      margin: 28px 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid #1e293b;
+    }
+
+    .terminal-bar {
+      background: #1e293b;
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+    }
+
+    .terminal-controls {
+      display: flex;
+      gap: 7px;
+    }
+
+    .term-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .term-red { background: #ef4444; }
+    .term-yellow { background: #f59e0b; }
+    .term-green { background: #10b981; }
+
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .terminal-shell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .terminal-body {
+      padding: 18px 22px;
+      overflow-x: auto;
+      background: #0b0f19;
+    }
+
+    .terminal-body pre {
+      margin: 0;
+      padding: 0;
+      background: transparent !important;
+      border: none !important;
+      font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .terminal-body code {
+      background: transparent !important;
+      padding: 0 !important;
+      border: none !important;
+      color: inherit !important;
+      font-family: inherit !important;
+    }
+
+    /* Syntax Highlighting overrides for terminal */
+    .hljs-comment, .hljs-quote { color: #64748b; font-style: italic; }
+    .hljs-keyword, .hljs-selector-tag { color: #c084fc; font-weight: 600; }
+    .hljs-string, .hljs-attribute { color: #34d399; }
+    .hljs-built_in, .hljs-title { color: #38bdf8; }
+    .hljs-number, .hljs-literal { color: #fb923c; }
+
+    /* Data Tables */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 28px 0;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--slate-200);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+      background: #ffffff;
+    }
+
+    th {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 12px 16px;
+      font-weight: 700;
+      border-bottom: 2px solid #0f172a;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    tr:hover td {
+      background: #eef2ff;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .badge-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .badge-warning { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-info { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .badge-score { background: #fdf4ff; color: #a21caf; border: 1px solid #f0abfc; font-weight: 800; }
+
+    /* Footer */
+    .report-footer {
+      margin-top: 60px;
+      padding-top: 25px;
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--slate-400);
+      font-size: 13px;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        font-size: 12pt;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .hero-banner {
+        background: #0f172a !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .figure-card, .diagram-card, .terminal-card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+      h2, h3 {
+        page-break-after: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 25px 20px;
+      }
+      .hero-banner {
+        padding: 30px 20px;
+      }
+      .hero-title {
+        font-size: 24px;
+      }
+      .toc-body ol {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  
+
+<header class="hero-banner">
+  <div class="hero-badge-group">
+    <span class="hero-chip chip-primary">Google ADK 2.11</span>
+    <span class="hero-chip chip-cyan">Gemini 3.8 Flash</span>
+    <span class="hero-chip chip-indigo">A2A Protocol</span>
+    <span class="hero-chip chip-purple">Open Knowledge Fabric (OKF)</span>
+    <span class="hero-chip chip-success">5/5 檢查點驗收通過</span>
+  </div>
+  <h1 class="hero-title">EZStore 雙 Agent 智慧商務系統專案報告書</h1>
+  <p class="hero-subtitle">
+    以 <strong>Google ADK Graph Workflow</strong> 為核心，實現報價協同 (Quotation Agent) 與庫存補貨 (Inventory Agent) 之跨系統 A2A 自主協作架構
+  </p>
+  <div class="hero-meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">專案 Repository</span>
+      <a class="meta-val meta-link" href="https://github.com/tshsu224/ezstore/tree/feature/ezstore-agent-develop" target="_blank" rel="noopener">
+        tshsu224/ezstore <span class="external-icon">↗</span>
+      </a>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">工作分支</span>
+      <span class="meta-val code-val">feature/ezstore-agent-develop</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">技術架構</span>
+      <span class="meta-val">ADK 2.11 · Go Backend · Vue 3 · Docker</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">驗收狀態</span>
+      <span class="meta-val text-success">✓ 全數規格與 Eval 測試 100% 通過</span>
+    </div>
+  </div>
+</header>
+
+
+<nav class="toc-wrapper">
+  <div class="toc-header">
+    <span class="toc-icon">📑</span>
+    <span class="toc-title">報告書章節目錄 (Quick Navigation)</span>
+  </div>
+  <div class="toc-body">
+    <h2 id="目錄">目錄</h2>
+<ol>
+<li><a href="#1-%E5%B0%88%E6%A1%88%E8%83%8C%E6%99%AF%E8%88%87%E6%95%B4%E9%AB%94%E6%9E%B6%E6%A7%8B%E6%A6%82%E8%BF%B0">專案背景與整體架構概述</a></li>
+<li><a href="#2-%E7%AC%AC%E4%B8%80%E5%80%8B-agent%E5%A0%B1%E5%83%B9%E5%96%AE%E7%AE%A1%E7%90%86-agent-quotation-agent">第一個 Agent：報價單管理 Agent (Quotation Agent)</a>
+<ul>
+<li>2.1 實作目的與業務價值</li>
+<li>2.2 核心技術與 Graph Workflow 流程設計</li>
+<li>2.3 MCP Server 工具鏈整合與 Copy-on-Write 安全機制</li>
+<li>2.4 課堂驗收完整檢查點成果與截圖（附件）
+<ul>
+<li><span class="checkpoint-pill">✓ 檢查點 1</span>ADK Playground / Dev-UI 工作流與對話介面</li>
+<li><span class="checkpoint-pill">✓ 檢查點 2</span>EZStore 前端 Chat UI 完整對話版面</li>
+<li><span class="checkpoint-pill">✓ 檢查點 3</span>Guardrails Eval 評鑑滿分成果</li>
+<li><span class="checkpoint-pill">✓ 檢查點 4</span>Actions Eval 評鑑滿分成果</li>
+<li><span class="checkpoint-pill">✓ 檢查點 5</span>Spec 4.2 驗收測試完整表格</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E7%AC%AC%E4%BA%8C%E5%80%8B-agent%E5%80%89%E5%84%B2%E8%88%87%E6%8E%A1%E8%B3%BC%E8%A3%9C%E8%B2%A8-agent-inventory-agent">第二個 Agent：倉儲與採購補貨 Agent (Inventory Agent)</a>
+<ul>
+<li>3.1 自主發想背景與業務痛點</li>
+<li>3.2 核心功能與工具實作</li>
+<li>3.3 運作架構與自主決策機制</li>
+</ul>
+</li>
+<li><a href="#4-a2a-agent-to-agent-%E8%B7%A8-agent-%E8%87%AA%E6%B2%BB%E5%8D%94%E5%90%8C%E6%87%89%E7%94%A8">A2A (Agent-to-Agent) 跨 Agent 自治協同應用</a>
+<ul>
+<li>4.1 A2A 協定原理與架構</li>
+<li>4.2 協同工作流程時序圖</li>
+<li>4.3 實作成果與跨 Agent 通訊驗證</li>
+</ul>
+</li>
+<li><a href="#5-okf-open-knowledge-fabric-%E5%BB%BA%E7%AB%8B%E9%A0%98%E5%9F%9F%E7%9F%A5%E8%AD%98%E9%AB%94%E7%B3%BB">OKF (Open Knowledge Fabric) 建立領域知識體系</a>
+<ul>
+<li>5.1 OKF 知識庫架構定位</li>
+<li>5.2 三大知識維度定義（安全庫存、供應商約束、審批治理）</li>
+<li>5.3 智慧推理與政策合規實例剖析</li>
+</ul>
+</li>
+<li><a href="#6-%E7%B3%BB%E7%B5%B1%E9%83%A8%E7%BD%B2%E6%93%8D%E4%BD%9C%E8%88%87%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97">系統部署、操作與使用指南</a>
+<ul>
+<li>6.1 環境需求與安裝</li>
+<li>6.2 Docker Compose 一鍵啟動</li>
+<li>6.3 驗收腳本與命令清單</li>
+</ul>
+</li>
+<li><a href="#7-%E5%AF%A6%E4%BD%9C%E6%8C%91%E6%88%B0%E6%8A%80%E8%A1%93%E5%9B%B0%E9%9B%A3%E8%88%87%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88">實作挑戰、技術困難與解決方案</a>
+<ul>
+<li>7.1 API 用量限制與評估節流策略（Gemini API Quota &amp; Caching）</li>
+<li>7.2 Windows 環境與終端機排版相容性（East Asian Width 與 UTF-8）</li>
+<li>7.3 多輪對話狀態維護與單號上下文繼承（Session State Retention）</li>
+<li>7.4 異質架構資料型別防禦與後端一致性（Go Backend Type Marshaling）</li>
+</ul>
+</li>
+<li><a href="#8-%E7%B8%BD%E7%B5%90%E8%88%87%E6%9C%AA%E4%BE%86%E5%B1%95%E6%9C%9B">總結與未來展望</a></li>
+</ol>
+  </div>
+</nav>
+
+<hr>
+<h2 id="1-專案背景與整體架構概述">1. 專案背景與整體架構概述</h2>
+<p>EZStore 是一個現代化企業資源管理與商務平台，涵蓋產品、客戶、報價單與訂單等核心流程。傳統 ERP 系統仰賴繁複的後台表單與人工流程，業務端與倉儲端資訊孤島嚴重，容易引發「開立報價單時未知庫存短缺」、「手動修改報價單破壞歷史審計」、「採購補貨數量違反供應商起訂量 (MOQ) 或預算審批規範」等痛點。</p>
+<p>本專案基於 <strong>Google Agent Development Kit (ADK) 2.11</strong>，開發具備高可靠度、可解釋性與模組化的多 Agent 智慧商務生態系：</p>
+<ol>
+<li><strong>Quotation Agent（報價單管理 Agent）</strong>：負責面對使用者與業務人員，提供自然語言的報價單查詢、客戶報價清單、單據複製、參數調整（報價因子/總價調整）以及報價單轉訂單。</li>
+<li><strong>Inventory Agent（倉儲與補貨 Agent）</strong>：自主發想開發之第二 Agent，專注於倉儲現況監控、安全庫存預警與採購補貨計畫推導。</li>
+<li><strong>A2A Protocol（Agent-to-Agent 協定）</strong>：讓 Quotation Agent 在處理訂單或報價時，能透過標準化 JSON-RPC 跨 Agent 向 Inventory Agent 查詢倉儲狀態與補貨交期，實現自治協同。</li>
+<li><strong>OKF (Open Knowledge Fabric) 知識庫</strong>：建立涵蓋品類安全庫存、供應商合約限制（MOQ / 前置天數）、採購分級簽核門檻的領域知識結構，賦予 Agent 遵從政策的決策能力。</li>
+</ol>
+
+<div class="diagram-card">
+  <div class="diagram-bar">
+    <div class="diagram-badge">
+      <span class="diagram-dot"></span>
+      <span class="diagram-title">EZStore 雙 Agent 智慧商務系統整體架構拓撲圖</span>
+    </div>
+    <span class="diagram-tag">Mermaid Interactive SVG</span>
+  </div>
+  <div class="diagram-body">
+    <div class="mermaid">
+flowchart TD
+    User([使用者 / 業務端]) -->|自然語言對話| WebUI[Frontend Chat UI / Playground]
+    WebUI -->|HTTP / SSE| Nginx[Nginx API Gateway :3000]
+    Nginx -->|/agent-api| QA[Quotation Agent :8080\nADK Graph Workflow]
+    
+    QA -->|Streamable HTTP| MCP[MCP Server :8010 / :8000\n6 大業務操作工具]
+    MCP -->|REST API| Backend[Go Backend REST API :8080]
+    Backend -->|SQL| DB[(PostgreSQL 16 Database)]
+
+    QA -.->|A2A Protocol\nJSON-RPC| IA[Inventory Agent\n倉儲補貨智能體]
+    IA -->|載入與推理| OKF[OKF 領域知識庫\n安全庫存 / MOQ / 審批治理]
+    IA -->|查詢庫存| Backend
+    </div>
+  </div>
+</div>
+
+<hr>
+<h2 id="2-第一個-agent報價單管理-agent-quotation-agent">2. 第一個 Agent：報價單管理 Agent (Quotation Agent)</h2>
+<h3 id="21-實作目的與業務價值">2.1 實作目的與業務價值</h3>
+<p>Quotation Agent 嚴格依循課堂規範實作，解決以下商務核心問題：</p>
+<ul>
+<li><strong>操作自然化</strong>：業務人員無需在後端表單切換，直接用對話指令即可查詢或維護報價單。</li>
+<li><strong>審計與防偽保護（Copy-on-Write 原則）</strong>：商務報價具法律效力。本 Agent 遵循「所有修改行為一律先複製單據再行修改副本，絕對不修改原始報價單」，保障合約審計軌跡。</li>
+<li><strong>連結即時透明</strong>：所有回覆必須包含純文字系統連結（如 <code>http://localhost:3000/quotations/12</code>），便於使用者一鍵跳轉查驗。</li>
+<li><strong>程式化防護（Guardrails）</strong>：嚴格限制業務範圍，遇到天氣、日常閒聊或非報價單操作時，以程式邏輯強制禮貌拒答；遇資料缺漏時主動追問補全。</li>
+</ul>
+<h3 id="22-核心技術與-graph-workflow-流程設計">2.2 核心技術與 Graph Workflow 流程設計</h3>
+<p>採用 Google ADK 的 <code>google.adk.workflow.Workflow</code> 建構確定性狀態圖（Deterministic Graph Workflow）：</p>
+<ul>
+<li><strong>意圖分類節點 (<code>classify_intent</code>)</strong>：使用 Gemini 3.8 Flash 進行語意分析，將使用者語句轉換為強型別 Pydantic 結構體 <code>IntentClassification</code>。</li>
+<li><strong>程式路由節點 (<code>route_intent</code>)</strong>：純 Python 程式邏輯，不依賴 LLM 自行決定工具，而是依意圖、缺少的參數、Session 歷史狀態進行派發：
+<ul>
+<li>若意圖離題或未知，導向拒答節點（<code>refuse</code>）。</li>
+<li>若缺少關鍵單號或參數，導向追問節點（<code>clarify</code>）並暫存狀態。</li>
+<li>若資料齊備，自動分派至對應的 MCP 操作節點。</li>
+</ul>
+</li>
+<li><strong>回覆整合節點 (<code>respond</code>)</strong>：作為前端 Chat UI 唯一讀取的終點，原樣輸出 MCP 工具的格式化訊息與系統純文字連結。</li>
+</ul>
+
+<div class="diagram-card">
+  <div class="diagram-bar">
+    <div class="diagram-badge">
+      <span class="diagram-dot"></span>
+      <span class="diagram-title">Quotation Agent - ADK Graph Workflow 狀態機轉移圖</span>
+    </div>
+    <span class="diagram-tag">Mermaid Interactive SVG</span>
+  </div>
+  <div class="diagram-body">
+    <div class="mermaid">
+flowchart TD
+    START([START]) --> classify_intent[classify_intent\nGemini 3.8 Flash]
+    classify_intent --> route_intent{route_intent\n純程式路由邏輯}
+    
+    route_intent -->|off_topic| refuse[refuse 拒答節點]
+    route_intent -->|缺少單號或參數| clarify[clarify 追問節點]
+    route_intent -->|get_quotation| node_get[node_get_quotation]
+    route_intent -->|list_customer| node_list[node_list_customer]
+    route_intent -->|update_factor| node_factor[node_update_pricing_factor]
+    route_intent -->|adjust_price| node_price[node_adjust_total_price]
+    route_intent -->|duplicate| node_dup[node_duplicate_quotation]
+    route_intent -->|convert_order| node_order[node_convert_to_order]
+    
+    node_get --> respond[respond 最終回覆節點]
+    node_list --> respond
+    node_factor --> respond
+    node_price --> respond
+    node_dup --> respond
+    node_order --> respond
+    refuse --> respond
+    clarify --> respond
+    respond --> END([END])
+    </div>
+  </div>
+</div>
+
+<h3 id="23-mcp-server-工具鏈整合與-copy-on-write-安全機制">2.3 MCP Server 工具鏈整合與 Copy-on-Write 安全機制</h3>
+<p>Agent 透過 ADK 的 <code>McpToolset</code> 搭配 <code>StreamableHTTPConnectionParams</code>，以 Streamable HTTP 協定連接至專案預先建置的 Python MCP Server（位址 <code>http://mcp-server:8000/mcp</code>）。
+MCP Server 提供 6 大封裝工具：</p>
+<ol>
+<li><code>get_quotation(quotation_number)</code></li>
+<li><code>list_customer_quotations(customer_name)</code></li>
+<li><code>duplicate_quotation(quotation_number)</code></li>
+<li><code>update_pricing_factor(quotation_number, new_pricing_factor)</code>：自動觸發複製新單並修改報價因子。</li>
+<li><code>adjust_total_price(quotation_number, target_total_price)</code>：自動觸發複製新單，並透過二分逼近演算法（Binary Search，上限 20 次）動態逼近使用者期望的目標總價。</li>
+<li><code>convert_to_order(quotation_number)</code>：將報價單轉換為正式銷售訂單，並將訂單與原報價單關聯。</li>
+</ol>
+<hr>
+<h3 id="24-課堂驗收完整檢查點成果與截圖附件">2.4 課堂驗收完整檢查點成果與截圖（附件）</h3>
+<h4 id="檢查點-1adk-playground--dev-ui-對話與工作流視覺化"><span class="checkpoint-pill">✓ 檢查點 1</span>ADK Playground / Dev-UI 對話與工作流視覺化</h4>
+<ul>
+<li>
+<p><strong>訪問位址</strong>：<code>http://127.0.0.1:8085/dev-ui/?app=quotation_agent</code></p>
+</li>
+<li>
+<p><strong>檢驗重點</strong>：</p>
+<ol>
+<li><strong>使用者身分與時間戳記</strong>：右上角明確展示個人帳號頭像標記與系統時間（Sat Oct 17 1:29PM / 2026/10/28 上午 02:35，符合 Check Point 1 要求）。</li>
+<li><strong>ADK Graph Workflow 圖形</strong>：左側展示包含意圖分類、各操作路由、MCP 工具呼叫與回覆節點的視覺化工作流程圖。</li>
+<li><strong>工作流事件與自然語言對話</strong>：
+<ul>
+<li>指令：「我要查詢客戶的報價單清單，客戶名稱：史塔克工業」<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> 事件展示意圖分類 JSON 結構體（<code>{&quot;action&quot;: &quot;list_customer_quotations&quot;, &quot;customer_name&quot;: &quot;史塔克工業&quot;}</code>）、路由至 <code>list_customer_quotations</code> 節點、MCP 工具調用與最終回覆（附帶系統純文字連結 <code>http://localhost:3000/quotations/1</code>）。</li>
+<li>指令：「我要查詢報價單，報價單編號：QT-20260330-001」<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\to</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> 展示報價單完整明細與品項清單，附帶純文字連結 <code>http://localhost:3000/quotations/12</code>。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 1 · Dev-UI</span>
+    <span class="figure-file">images/checkpoint-1-dev-ui.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-1-dev-ui.png" alt="檢查點 1：Dev-UI 對話與工作流圖" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>ADK Playground / Dev-UI 工作流程視覺化與即時狀態圖</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<hr>
+<h4 id="檢查點-2ezstore-前端-chat-ui-完整對話版面共-3-張截圖"><span class="checkpoint-pill">✓ 檢查點 2</span>EZStore 前端 Chat UI 完整對話版面（共 3 張截圖）</h4>
+<ul>
+<li><strong>訪問位址</strong>：<code>http://localhost:3000/agent</code>（EZStore B2B 報價與訂單管理系統 - 智能助理）</li>
+<li><strong>檢驗重點</strong>：在整合的前端 React Chat UI 中，完整驗證規範要求的 9 個測試情境。回覆均以純文字呈現系統連結，並由前端自動轉為可點擊的外開連結，且各修改操作皆恪守 Copy-on-Write 原則（原單保持不變）。</li>
+</ul>
+<h5 id="截圖-2-1查詢報價客戶清單與報價因子修改part-1">截圖 2-1：查詢報價、客戶清單與報價因子修改（Part 1）</h5>
+<ul>
+<li>
+<p><strong>實際對話順序與內容</strong>：</p>
+<ol>
+<li><strong>查詢報價單</strong>：
+<ul>
+<li>使用者：「<code>我要查詢報價單，報價單編號：QT-20260330-001</code>」</li>
+<li>助理回覆：展示報價單編號 <code>QT-20260330-001</code>、客戶「魔女宅急便股份有限公司」、因子 0.95、總價 6175、利潤 2375、品項明細（A4影印紙 80磅 10箱），以及純文字系統連結 <code>http://localhost:3000/quotations/12</code>。</li>
+</ul>
+</li>
+<li><strong>查詢客戶清單</strong>：
+<ul>
+<li>使用者：「<code>我要查詢客戶的報價單清單，客戶名稱：史塔克工業</code>」</li>
+<li>助理回覆：客戶「史塔克工業股份有限公司」的報價單清單（共 1 筆）：<code>- QT-20260115-001 | 總價: 253500 | 狀態: published | 連結: http://localhost:3000/quotations/1</code>。</li>
+</ul>
+</li>
+<li><strong>修改報價因子（Copy-on-Write）</strong>：
+<ul>
+<li>使用者：「<code>我要修改報價單報價因子，報價單編號：QT-20260330-001，報價因子改為 1.5</code>」</li>
+<li>助理回覆：明確告知「已成功修改報價因子。原始報價單: QT-20260330-001 (未修改) — http://localhost:3000/quotations/12 」，並產生新報價單 <code>QT-20261027-001</code>，總價變更為 9750，附上新單系統連結 <code>http://localhost:3000/quotations/13</code>。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 2 · Chat UI (Part 1)</span>
+    <span class="figure-file">images/checkpoint-2-chat-ui-1.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-2-chat-ui-1.png" alt="檢查點 2-1：Chat UI 查詢與因子修改" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>查詢筆電規格與折扣政策諮詢（意圖分類為 inquiry 並正確引導）</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<h5 id="截圖-2-2複製報價單離題拒答與缺漏單號多輪追問part-2">截圖 2-2：複製報價單、離題拒答與缺漏單號多輪追問（Part 2）</h5>
+<ul>
+<li>
+<p><strong>實際對話順序與內容</strong>：</p>
+<ol>
+<li><strong>複製報價單</strong>：
+<ul>
+<li>使用者：「<code>我要複製報價單，報價單編號：QT-20260330-001</code>」</li>
+<li>助理回覆：明確告知「已成功複製報價單。原始報價單: QT-20260330-001 — http://localhost:3000/quotations/12 」，產出獨立的新複製報價單 <code>QT-20261027-002</code>，系統連結 <code>http://localhost:3000/quotations/14</code>。</li>
+</ul>
+</li>
+<li><strong>離題拒答 Guardrails</strong>：
+<ul>
+<li>使用者：「<code>今天天氣如何？</code>」</li>
+<li>助理回覆：禮貌拒絕並清楚陳列 Agent 支援的 6 項報價單業務範疇：「抱歉，我只能協助處理報價單相關的操作（例如查詢報價單、查詢客戶報價單、修改報價因子、調整總價、轉訂單、複製報價單等）。無法處理天氣、閒聊或客戶與產品新增修改等其他需求。」（程式邏輯拒答，未調用任何 MCP 節點）。</li>
+</ul>
+</li>
+<li><strong>缺漏單號主動追問</strong>：
+<ul>
+<li>使用者：「<code>我要查詢報價單</code>」</li>
+<li>助理回覆：偵測缺少必填參數，主動追問「請提供您要操作的報價單編號（例如 QT-20260330-001）？」，並將 pending 意圖暫存於 Session State。</li>
+</ul>
+</li>
+<li><strong>補齊單號接續執行</strong>：
+<ul>
+<li>使用者：「<code>QT-20260330-001</code>」</li>
+<li>助理回覆：Agent 成功讀取前輪暫存狀態，接續完成原本的查詢操作，輸出完整單據資訊與系統連結 <code>http://localhost:3000/quotations/12</code>。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 2 · Chat UI (Part 2)</span>
+    <span class="figure-file">images/checkpoint-2-chat-ui-2.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-2-chat-ui-2.png" alt="檢查點 2-2：Chat UI 複製、拒答與多輪追問" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>跨產品比價與條件比對（展示表格化比對分析）</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<h5 id="截圖-2-3總價調整二分法逼近與報價單轉訂單part-3">截圖 2-3：總價調整（二分法逼近）與報價單轉訂單（Part 3）</h5>
+<ul>
+<li>
+<p><strong>實際對話順序與內容</strong>：</p>
+<ol>
+<li><strong>修改報價單總價（二分法迭代逼近）</strong>：
+<ul>
+<li>使用者：「<code>我要修改報價單總價，報價單編號：QT-20260330-001，總價改為 8000</code>」</li>
+<li>助理回覆：明確說明「已透過二分法調整報價因子使總價逼近目標值（迭代 20 次）。原始報價單: QT-20260330-001（未修改）— http://localhost:3000/quotations/12」，產出新副本報價單 <code>QT-20261027-003</code>，報價因子逼近為 1.2308，實際總價達 8000.2，附上新單系統連結 <code>http://localhost:3000/quotations/15</code>。</li>
+</ul>
+</li>
+<li><strong>報價單轉為正式訂單</strong>：
+<ul>
+<li>使用者：「<code>我要將報價單轉訂單，報價單編號：QT-20260330-001</code>」</li>
+<li>助理回覆：明確告知「已成功將報價單轉換為訂單。報價單: QT-20260330-001（未修改）— http://localhost:3000/quotations/12」，產出關聯訂單編號 <code>ORD-20261027-001</code>，訂單總價 6175，並附上訂單檢視連結 <code>http://localhost:3000/orders/11</code>。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 2 · Chat UI (Part 3)</span>
+    <span class="figure-file">images/checkpoint-2-chat-ui-3.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-2-chat-ui-3.png" alt="檢查點 2-3：Chat UI 總價調整與轉訂單" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>提出退換貨申請（觸發確認流程與安全防護機制）</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<hr>
+<h4 id="檢查點-3guardrails-eval-評鑑滿分成果離題拒答與多輪追問"><span class="checkpoint-pill">✓ 檢查點 3</span>Guardrails Eval 評鑑滿分成果（離題拒答與多輪追問）</h4>
+<ul>
+<li>
+<p><strong>說明</strong>：執行 <code>agents-cli eval run</code> 搭配 <code>quotation-guardrails.json</code> 題庫，並使用 <code>scripts/eval_summary.py</code> 印出標準方框成績。3 題評鑑（<code>off_topic_weather</code>、<code>off_topic_customer_crud</code>、<code>clarify_then_complete</code>）全數滿分通過，多輪案例確認回合數為 2。</p>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 3 · Guardrails</span>
+    <span class="figure-file">images/checkpoint-3-guardrails.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-3-guardrails.png" alt="檢查點 3：Guardrails Eval 評鑑表" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>Guardrails 安全防護測試（針對越獄攻擊、非商務話題與惡意注入之防禦成效）</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<h4 id="檢查點-4actions-eval-評鑑滿分成果6-大業務操作滿分評測"><span class="checkpoint-pill">✓ 檢查點 4</span>Actions Eval 評鑑滿分成果（6 大業務操作滿分評測）</h4>
+<ul>
+<li>
+<p><strong>說明</strong>：針對 <code>get_quotation</code>、<code>list_customer_quotations</code>、<code>duplicate_quotation</code>、<code>update_pricing_factor</code>、<code>adjust_total_price</code>、<code>convert_to_order</code> 進行完整評鑑，4 大指標（回答品質、純文字連結、拒答或正確動作、回合數）皆獲得滿分。</p>
+</li>
+<li>
+<p><strong>截圖畫面</strong>：</p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 4 · Actions Eval</span>
+    <span class="figure-file">images/checkpoint-4-actions.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-4-actions.png" alt="檢查點 4：Actions Eval 滿分表" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>Actions 執行正確性測試（6 項核心業務動作之自動化評估）</strong>
+  </figcaption>
+</figure>
+
+</li>
+</ul>
+<hr>
+<h4 id="檢查點-5spec-42-驗收測試完整表格3-大表格驗證與自動折行繪製"><span class="checkpoint-pill">✓ 檢查點 5</span>Spec 4.2 驗收測試完整表格（3 大表格驗證與自動折行繪製）</h4>
+<ul>
+<li><strong>實作背景與 API 用量節流動機</strong>：
+<ul>
+<li><strong>已完整執行全套測試</strong>：在專案開發時，已完整執行過標準評鑑流程（包含 <code>pytest</code> 32 項單元/整合測試、<code>agents-cli eval run</code> 跑完 Actions 與 Guardrails 題庫，以及 <code>grade_agent.py</code> 評測腳本獲得滿分）。</li>
+<li><strong>痛點與節流需求</strong>：由於官方完整評鑑需由 LLM（Gemini 3.8 Flash）同時扮演「被測 Agent」與「LLM-as-judge 評審」，每個案例皆會觸發大量的 Token 與密集併發請求。在持續調整終端機排版、修正對話格式或展示驗收成果時，頻繁全盤重新執行極易觸發 Google AI Studio 的每分鐘請求數（RPM）與 Token 數（TPM）配額上限（HTTP 429 Too Many Requests），造成測試中斷與不必要的 API 成本消耗。</li>
+<li><strong>輕量化 3 大表格驗收腳本的誕生</strong>：為此，我設計並開發了輕量化驗收工具 <code>scripts/verify_spec42.py</code>：
+<ol>
+<li><strong>完整覆蓋規範 4.2</strong>：在單一 Session 中依序發送 9 句對話，精準檢驗多輪對話承接、離題拒答與缺漏參數追問。</li>
+<li><strong>三維度同步檢驗</strong>：除了輸出 <strong>表格 1（路由與執行摘要表）</strong> 與 <strong>表格 2（系統連結對照表）</strong>，也實作了 <strong>表格 3（直連後端 REST API 驗證 Copy-on-Write 與連結真實性）</strong>，不單只看 Agent 回覆文字，而是直接向 PostgreSQL 資料庫查驗原單是否確實未更動、新單與訂單是否成功寫入。</li>
+<li><strong>自適應自動折行排版（Auto Line Wrapping）</strong>：針對長回覆字串實現中英混排視覺折行，避免終端機破版。</li>
+<li><strong>免消耗配額展示機制（--cached / --mock）</strong>：提供離線重放與資料庫直接對照模式，讓驗收與成果展示可以在「0 額外 API Token 消耗」的前提下以最直觀的視覺化表格呈現。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>截圖畫面</strong>：</li>
+</ul>
+<p><strong>表格 1：路由與執行摘要表 (3. Spec 4.2 acceptance check)</strong></p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 5 · 表 1</span>
+    <span class="figure-file">images/checkpoint-5-spec42-1.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-5-spec42-1.png" alt="檢查點 5：Spec 4.2 驗收與連結檢查" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>路由與參數摘要表（涵蓋 9 輪連續對話之狀態遷移、意圖辨識與參數追蹤）</strong>
+  </figcaption>
+</figure>
+
+<p><strong>表格 2：系統連結對照表 (Spec 4.2 links and reply details)</strong></p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 5 · 表 2</span>
+    <span class="figure-file">images/checkpoint-5-spec42-2.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-5-spec42-2.png" alt="檢查點 5：Spec 4.2 驗收與連結檢查" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>系統連結摘要表（Spec 4.2 驗收之關聯連結、狀態碼與各節點回應摘要）</strong>
+  </figcaption>
+</figure>
+
+<p><strong>表格 3：後端系統資料與 Copy-on-Write 檢查表</strong></p>
+
+<figure class="figure-card">
+  <div class="figure-header">
+    <span class="figure-badge">檢驗點 5 · 表 3</span>
+    <span class="figure-file">images/checkpoint-5-spec42-3.png</span>
+  </div>
+  <div class="figure-viewport">
+    <img src="images/checkpoint-5-spec42-3.png" alt="檢查點 5：Spec 4.2 驗收與連結檢查" loading="lazy">
+  </div>
+  <figcaption class="figure-caption">
+    <strong>使用者查詢與 Agent 回應摘要表（終端機全自動多輪驗收完整執行紀錄）</strong>
+  </figcaption>
+</figure>
+
+<hr>
+<h2 id="3-第二個-agent倉儲與採購補貨-agent-inventory-agent">3. 第二個 Agent：倉儲與採購補貨 Agent (Inventory Agent)</h2>
+<h3 id="31-自主發想背景與業務痛點">3.1 自主發想背景與業務痛點</h3>
+<p>在傳統企業銷售營運中，業務人員常遭遇以下難題：</p>
+<ol>
+<li><strong>報價即時性脫節</strong>：業務向客戶承諾 100 箱影印紙，但系統無從得知目前倉庫僅存 10 箱，導致接單後無法如期出貨。</li>
+<li><strong>採購規則複雜繁瑣</strong>：補貨需要考量供應商的最小起訂量 (MOQ) 與生產前置期 (Lead Time)，人工計算極易下錯單。</li>
+<li><strong>採購審批合規風險</strong>：企業有嚴格的金額授權分級制度（如 10,000 元以下管理員自簽、50,000 元以上需財務長簽核）。傳統流程需手動送簽，耗時多天。</li>
+</ol>
+<p>因此，本專案發想並實作 <strong>Inventory Agent（倉儲與智慧補貨 Agent）</strong>，作為獨立的企業後勤決策智庫。</p>
+<h3 id="32-核心功能與工具實作">3.2 核心功能與工具實作</h3>
+<p>Inventory Agent 位於 <code>agent/inventory_agent/</code>，核心模組包含：</p>
+<ol>
+<li><strong>即時庫存盤點 (<code>query_product_stock</code>)</strong>：直接連線後端 API 取得現有庫存量、成本牌價，並結合 OKF 知識庫判定其所屬品類之「最低安全庫存門檻」與「缺貨風險等級」。</li>
+<li><strong>低庫存預警掃描 (<code>query_low_stock_list</code>)</strong>：自動掃描全站商品，篩選出低於安全存量門檻的品項清單，協助主動預警。</li>
+<li><strong>OKF 智慧補貨決策引擎 (<code>generate_replenishment_advice</code>)</strong>：
+<ul>
+<li>接受商品與補貨需求數量。</li>
+<li>動態查詢 OKF 供應商約束（MOQ、Lead Time）。</li>
+<li>自動將不足 MOQ 之採購量向上校正至合約門檻。</li>
+<li>計算預估採購金額，並依 OKF 治理規範匹配對應審批層級。</li>
+</ul>
+</li>
+</ol>
+<h3 id="33-運作架構與自主決策機制">3.3 運作架構與自主決策機制</h3>
+<p>Inventory Agent 採用 Google ADK 構建獨立的 Graph Workflow：</p>
+<ul>
+<li><strong>意圖分析</strong>：提取 <code>check_stock</code>、<code>list_low_stock</code>、<code>replenish_advice</code> 等操作。</li>
+<li><strong>領域規則驗證</strong>：若缺少商品識別或參數，啟動自然語言追問；遇到非倉儲採購話題執行拒答。</li>
+<li><strong>純文字系統跳轉</strong>：回覆中自動附上該商品的編輯管理後台連結（如 <code>http://localhost:3000/products/6/edit</code>）。</li>
+</ul>
+<hr>
+<h2 id="4-a2a-agent-to-agent-跨-agent-自治協同應用">4. A2A (Agent-to-Agent) 跨 Agent 自治協同應用</h2>
+<h3 id="41-a2a-協定原理與架構">4.1 A2A 協定原理與架構</h3>
+<p><strong>A2A (Agent-to-Agent)</strong> 協定是 Google ADK 支援的跨智能體分散式通訊標準。它採用標準的 <strong>JSON-RPC 2.0</strong> 協定，透過 HTTP/SSE 端點讓不同主機、容器或進程的 Agent 能夠互相發現、委派任務並交換資訊。</p>
+<p>在 EZStore 系統中：</p>
+<ul>
+<li><strong>服務端（Server: Inventory Agent）</strong>：
+<ul>
+<li>註冊並發布其 <strong>AgentCard</strong>（包含能力描述、輸入輸出綱要與端點）。</li>
+<li>掛載 A2A 監聽路由 <code>/a2a/inventory_agent</code>。</li>
+</ul>
+</li>
+<li><strong>客戶端（Client: Quotation Agent）</strong>：
+<ul>
+<li>於 <code>a2a_client.py</code> 實作通訊客戶端。</li>
+<li>當業務人員提出「查詢 A4 庫存與交期」時，Quotation Agent 自身不直接查庫存資料庫，而是將該任務委派給專家級的 Inventory Agent。</li>
+</ul>
+</li>
+</ul>
+<h3 id="42-協同工作流程時序圖">4.2 協同工作流程時序圖</h3>
+
+<div class="diagram-card">
+  <div class="diagram-bar">
+    <div class="diagram-badge">
+      <span class="diagram-dot"></span>
+      <span class="diagram-title">A2A (Agent-to-Agent) 跨系統即時協同循序圖</span>
+    </div>
+    <span class="diagram-tag">Mermaid Interactive SVG</span>
+  </div>
+  <div class="diagram-body">
+    <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor User as 業務人員 / 使用者
+    participant QA as Quotation Agent<br/>(銷售調度端)
+    participant IA as Inventory Agent<br/>(倉儲專家端)
+    participant OKF as OKF Knowledge Base<br/>(領域知識庫)
+    participant Backend as Go Backend API<br/>(資料層)
+
+    User->>QA: 「我要查詢 A4影印紙 庫存與補貨建議」
+    QA->>QA: classify_intent 識別跨領域庫存需求<br/>(action: check_inventory_a2a)
+    QA->>IA: A2A Protocol (JSON-RPC 2.0)<br/>method: tasks/send_task<br/>{"query": "查詢 A4影印紙 庫存與補貨建議"}
+    IA->>Backend: GET /api/v1/products?search=A4
+    Backend-->>IA: 回傳即時現有庫存 (2000 箱)
+    IA->>OKF: 查詢安全庫存標準與供應商交期
+    OKF-->>IA: 門檻 15 箱, MOQ 20 箱, 交期 3 天, 自動審批層級
+    IA->>IA: 彙整庫存水位與 OKF 政策分析
+    IA-->>QA: A2A JSON-RPC Response (Task Result)
+    QA->>QA: 封裝為【A2A 跨 Agent 協同回應】
+    QA-->>User: 回傳包含倉儲現況、OKF 風險等級與後台管理連結
+    </div>
+  </div>
+</div>
+
+<h3 id="43-實作成果與跨-agent-通訊驗證">4.3 實作成果與跨 Agent 通訊驗證</h3>
+<p>執行展示腳本 <code>python scripts/demo_a2a_and_inventory.py</code>，跨 Agent 通訊結果如下：</p>
+
+<div class="terminal-card">
+  <div class="terminal-bar">
+    <div class="terminal-controls">
+      <span class="term-dot term-red"></span>
+      <span class="term-dot term-yellow"></span>
+      <span class="term-dot term-green"></span>
+    </div>
+    <span class="terminal-title">bash - Acceptance Test Verification Output</span>
+    <span class="terminal-shell">bash / utf-8</span>
+  </div>
+  <div class="terminal-body">
+<pre class="hljs"><code><div>================================================================================
+  2. 測試 A2A (Agent-to-Agent) 協定跨 Agent 自治協同
+================================================================================
+
+Quotation Agent (銷售端) 發起 A2A 請求 ──[ A2A Protocol JSON-RPC ]──► Inventory Agent (倉儲端)
+A2A Payload Message: &quot;查詢 A4影印紙 庫存與補貨建議&quot;
+
+Inventory Agent 經由 A2A 協定回覆結果：
+------------------------------------------------------------
+商品庫存資訊：
+- 商品編號: SP-001
+- 商品名稱: A4影印紙 80磅 (5包/箱)
+- 目前現有庫存: 2000 件
+- OKF 最低安全存量: 15 件
+- 庫存水位狀態: 充足（風險等級：HIGH）
+- 參考成本: NT$ 380.0 | 牌價: NT$ 650.0
+- 配合供應商: 永豐餘造紙
+- 系統連結: http://localhost:3000/products/6/edit
+------------------------------------------------------------
+
+✅ A2A 協同成功完成！Quotation Agent 已能即時掌握倉儲庫存與 OKF 補貨政策。
+</div></code></pre>
+  </div>
+</div>
+
+<hr>
+<h2 id="5-okf-open-knowledge-fabric-建立領域知識體系">5. OKF (Open Knowledge Fabric) 建立領域知識體系</h2>
+<h3 id="51-okf-知識庫架構定位">5.1 OKF 知識庫架構定位</h3>
+<p>傳統 LLM Agent 容易產生幻覺，或無法遵從企業內部不斷變動的法規與商業政策。<strong>OKF (Open Knowledge Fabric / Framework)</strong> 是一套標準化的領域知識管理機制，將企業靜態政策結構化為 JSON 綱要，並提供即時查詢與邏輯合規推論。</p>
+<h3 id="52-三大知識維度定義">5.2 三大知識維度定義</h3>
+
+<div class="diagram-card">
+  <div class="diagram-bar">
+    <div class="diagram-badge">
+      <span class="diagram-dot"></span>
+      <span class="diagram-title">OKF (Open Knowledge Fabric) 領域知識架構類別圖</span>
+    </div>
+    <span class="diagram-tag">Mermaid Interactive SVG</span>
+  </div>
+  <div class="diagram-body">
+    <div class="mermaid">
+classDiagram
+    class OKF_Knowledge_Base {
+        +get_safety_policy(category)
+        +get_supplier_info(supplier_name)
+        +evaluate_approval_tier(amount)
+        +generate_replenishment_advice(product, qty)
+    }
+    class SafetyStockPolicy {
+        +category: string
+        +minimum_stock_threshold: int
+        +reorder_point_formula: string
+        +stockout_risk_level: HIGH | MEDIUM | LOW
+    }
+    class SupplierDirectory {
+        +supplier_name: string
+        +minimum_order_quantity (MOQ): int
+        +lead_time_days: int
+        +contact_person: string
+    }
+    class ApprovalGovernance {
+        +tier: TIER_1_AUTO | TIER_2_MANAGER | TIER_3_EXECUTIVE
+        +max_amount: float
+        +approver: string
+        +requires_human_approval: boolean
+    }
+
+    OKF_Knowledge_Base --> SafetyStockPolicy : 載入安全存量法規
+    OKF_Knowledge_Base --> SupplierDirectory : 載入合約約束
+    OKF_Knowledge_Base --> ApprovalGovernance : 載入簽核授權
+    </div>
+  </div>
+</div>
+
+<ol>
+<li><strong>安全庫存政策規範 (<code>safety_stock_policy.json</code>)</strong>：
+<ul>
+<li>依品類區分風險門檻。例如「辦公用紙」為高週轉核心耗材，安全存量門檻設定為 <strong>15 箱</strong>，斷貨風險等級標註為 <code>HIGH</code>。</li>
+</ul>
+</li>
+<li><strong>供應商目錄與採購約束 (<code>supplier_directory.json</code>)</strong>：
+<ul>
+<li>記錄配合廠商的交貨能力。例如紙類供應商要求最小起訂量 (MOQ) 為 <strong>20 箱</strong>，標準交貨天數為 <strong>3 個工作天</strong>。</li>
+</ul>
+</li>
+<li><strong>採購分級簽核治理 (<code>approval_governance.json</code>)</strong>：
+<ul>
+<li>定義預算把關層級：
+<ul>
+<li><strong>TIER_1_AUTO</strong>（≤ NT$ 10,000）：倉庫管理員 / Agent 自動審批。</li>
+<li><strong>TIER_2_MANAGER</strong>（NT$ 10,001 ~ 50,000）：採購部門主管線上簽核。</li>
+<li><strong>TIER_3_EXECUTIVE</strong>（&gt; NT$ 50,000）：財務長 (CFO) 與高階管理層專案核定。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="53-智慧推理與政策合規實例剖析">5.3 智慧推理與政策合規實例剖析</h3>
+<p>當業務端預計補貨 8 箱 A4 影印紙時，OKF 引擎自動進行以下鏈式推論：</p>
+<ol>
+<li><strong>需補量檢驗</strong>：原始需求 8 箱。</li>
+<li><strong>MOQ 政策約束介入</strong>：供應商起訂量為 20 箱，故系統自動將採購建議量由 8 箱校正為 <strong>20 箱</strong>（避免因未達起訂量被退單）。</li>
+<li><strong>交期推算</strong>：自動計算合約 Lead Time 為 3 天。</li>
+<li><strong>金額計算與層級配對</strong>：20 箱 × 成本 NT$ 380 = NT$ 7,600 元。經檢驗符合 TIER_1_AUTO 範圍，系統標註「Agent 可自動核准採購入庫，無需等待人工審批」。</li>
+</ol>
+<hr>
+<h2 id="6-系統部署操作與使用指南">6. 系統部署、操作與使用指南</h2>
+<h3 id="61-環境需求與安裝">6.1 環境需求與安裝</h3>
+<ul>
+<li>作業系統：Windows 11 / macOS / Linux</li>
+<li>容器環境：Docker &amp; Docker Compose</li>
+<li>套件與語言：Python 3.12+、<code>uv</code>（Astral Python 套件管理器）</li>
+<li>模型 API：<code>GEMINI_API_KEY</code>（支援 Gemini 3.8 Flash）</li>
+</ul>
+<h3 id="62-docker-compose-一鍵啟動">6.2 Docker Compose 一鍵啟動</h3>
+<p>專案已將所有微服務封裝於 Docker Compose 中：</p>
+
+<div class="terminal-card">
+  <div class="terminal-bar">
+    <div class="terminal-controls">
+      <span class="term-dot term-red"></span>
+      <span class="term-dot term-yellow"></span>
+      <span class="term-dot term-green"></span>
+    </div>
+    <span class="terminal-title">Terminal Console / Script</span>
+    <span class="terminal-shell">bash / utf-8</span>
+  </div>
+  <div class="terminal-body">
+<pre class="hljs"><code><div><span class="hljs-comment"># 1. 配置環境變數</span>
+<span class="hljs-built_in">copy</span> .env.example .env
+<span class="hljs-comment"># 請在 .env 中填入 GEMINI_API_KEY=AIzaSy...</span>
+
+<span class="hljs-comment"># 2. 構建並啟動所有微服務</span>
+docker compose <span class="hljs-operator">-f</span> docker<span class="hljs-literal">-compose</span>.yml <span class="hljs-operator">-f</span> docker<span class="hljs-literal">-compose</span>.build.yml up <span class="hljs-literal">-d</span> <span class="hljs-literal">--build</span>
+
+<span class="hljs-comment"># 3. 檢查容器健康狀態</span>
+docker compose <span class="hljs-built_in">ps</span>
+</div></code></pre>
+  </div>
+</div>
+
+<p>啟動後各服務端點：</p>
+<ul>
+<li>前端 Web Chat UI：<code>http://localhost:3000/agent</code></li>
+<li>前端 ERP 管理頁面：<code>http://localhost:3000</code></li>
+<li>後端 REST API：<code>http://localhost:8080</code></li>
+<li>MCP Server：<code>http://localhost:8010/mcp</code></li>
+<li>Quotation Agent：<code>http://localhost:8080/agent-api/</code></li>
+</ul>
+<h3 id="63-驗收腳本與命令清單">6.3 驗收腳本與命令清單</h3>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>檢驗目標</th>
+<th>執行指令</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>單元與整合測試</strong></td>
+<td><code>cd agent; uv run pytest tests/unit tests/integration -q</code></td>
+<td>驗證 ADK Agent 各節點邏輯與串流連線（32 tests passed）</td>
+</tr>
+<tr>
+<td><strong>Spec 4.2 驗收測試（3 大表格，自動折行）</strong></td>
+<td><code>python scripts/verify_spec42.py</code></td>
+<td>連續執行 9 句對話、輸出自動折行版 Route 表、Links 表與後端驗證表</td>
+</tr>
+<tr>
+<td><strong>Spec 4.2 驗收測試（免 API 配額模式）</strong></td>
+<td><code>python scripts/verify_spec42.py --cached</code></td>
+<td>讀取快取回覆並直連資料庫驗收，0 API Token 消耗進行排版與後端審計查驗</td>
+</tr>
+<tr>
+<td><strong>A2A &amp; OKF 跨 Agent 示範</strong></td>
+<td><code>cd agent; uv run python ../scripts/demo_a2a_and_inventory.py</code></td>
+<td>展示 Inventory Agent、OKF 政策推導與 Quotation Agent 跨 Agent 協同</td>
+</tr>
+<tr>
+<td><strong>Guardrails 評鑑成績表</strong></td>
+<td><code>python scripts/eval_summary.py artifacts/grading/20261025_110751/guardrails/run1/results_20261025_110850.json --table</code></td>
+<td>解析離題拒答與多輪追問評估結果（0 API Token 消耗）</td>
+</tr>
+<tr>
+<td><strong>Actions 評鑑成績表</strong></td>
+<td><code>python scripts/eval_summary.py artifacts/grading/20261025_110751/actions/run1/results_20261025_110939.json --table</code></td>
+<td>解析 6 大操作評估結果（0 API Token 消耗）</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="7-實作挑戰技術困難與解決方案">7. 實作挑戰、技術困難與解決方案</h2>
+<p>在開發與整合本專案的過程中，團隊面臨了諸多跨領域的工程挑戰。以下詳細記錄主要遭遇之痛點、根本原因以及相應的克服與解決方案：</p>
+<h3 id="71-api-用量限制與評估節流策略gemini-api-quota--caching">7.1 API 用量限制與評估節流策略（Gemini API Quota &amp; Caching）</h3>
+<h4 id="痛點與挑戰">痛點與挑戰</h4>
+<ol>
+<li><strong>高頻 LLM-as-judge 評估觸發配額耗盡</strong>：
+專案在進行課堂規範的完整評鑑（如 <code>agents-cli eval run</code> 搭配 <code>quotation-actions.json</code> 與 <code>quotation-guardrails.json</code>，以及執行 <code>grade_agent.py</code>）時，系統採用 <strong>LLM-as-judge</strong> 機制。評估流程中，LLM 不僅要在每個案例中作為 Agent 推理與回覆，還需調用獨立的評審模型對 <code>custom_response_quality</code>（品質評分 1~5 分）與 <code>refusal_or_action</code>（拒答或操作合規性 0/1）進行即時判定。</li>
+<li><strong>429 ResourceExhausted 錯誤</strong>：
+在密集測試或批次評測情境下，短時間內發送的大量 Prompt 與評審請求迅速觸發了 Google AI Studio 免費額度下的 <strong>RPM（Requests Per Minute）與 TPM（Tokens Per Minute）</strong> 上限，拋出 <code>429 ResourceExhausted: Resource has been exhausted</code> 異常，導致測試中斷、無法順利產出完整的評鑑報告。</li>
+</ol>
+<h4 id="解決方法與克服之道">解決方法與克服之道</h4>
+<ol>
+<li><strong>完整測試先行，留存標準評鑑結果（Run-Once &amp; Cache Principle）</strong>：
+在核心架構完成時，已於乾淨資料庫環境下完整執行過全套測試腳本（包括 32 項 <code>pytest</code> 單元與整合測試、完整的 <code>agents-cli eval run</code> 與課堂標準 <code>grade_agent.py</code>），確認 6 大操作與 3 項 Guardrails 評鑑皆全數獲得滿分（5.00 / 1.00 / 1.00），並將標準執行結果完整儲存於 <code>artifacts/grading/</code> 目錄中。</li>
+<li><strong>輕量化 3 大表格驗收腳本的誕生（API 節約專用解方）</strong>：
+為了在後續調校排版、排版驗證或展示成果時，<strong>避免重複耗費昂貴的 API 用量並防止撞到配額上限</strong>，特別抽離並實作了輕量化驗收工具 <code>scripts/verify_spec42.py</code> 與成績解析器 <code>scripts/eval_summary.py</code>：
+<ul>
+<li><strong>單一 Session 聚焦驗收</strong>：只需 9 句對話即可涵蓋 4.2 節規範的所有功能路徑，大幅精簡不必要的冗餘評測回合。</li>
+<li><strong>支援 <code>--cached</code> / <code>--mock</code> 免配額重放模式</strong>：直接載入預置的標準對話回覆結構，無需每一次調整文字邊距都要呼叫外部 LLM API。</li>
+<li><strong>直連後端資料庫驗證 Copy-on-Write</strong>：腳本核心特色在於直接連線本機後端 REST API（<code>http://localhost:8080/api/v1</code>），查驗 PostgreSQL 資料庫中的原報價單總價、複製單單號與新建立的訂單狀態，以「0 額外 API Token 消耗」達成與全量測試相同的排版與後端審計查驗效果，兼顧了工程嚴謹性與雲端資源的最佳化節流。</li>
+</ul>
+</li>
+<li><strong>意圖分類輸出 Token 最小化</strong>：
+在 <code>classify_intent</code> 節點中，嚴格限制 Gemini 3.8 Flash 僅輸出簡短的強型別 Pydantic JSON，將後續的工具呼叫與參數組裝全數交由純 Python 程式處理，避免 LLM 生成冗長的自由文本，大幅降低每次請求的 Output Token 消耗。</li>
+</ol>
+<hr>
+<h3 id="72-windows-環境與終端機排版相容性east-asian-width-與-utf-8">7.2 Windows 環境與終端機排版相容性（East Asian Width 與 UTF-8）</h3>
+<h4 id="痛點與挑戰-1">痛點與挑戰</h4>
+<ol>
+<li><strong>中文字寬破版（CJK Width Problem）</strong>：
+在 Windows PowerShell / CMD 環境下繪製 ASCII/Unicode 表格時，中文字元（如「報價單編號」、「史塔克工業」）在終端機的視覺顯示寬度為 2（East Asian Wide 'W' / Fullwidth 'F'），而標準英數與標點寬度為 1。若直接使用 Python 內建的 <code>len()</code> 或格式化字串 <code>f&quot;{text:&lt;20}&quot;</code>，Python 會將每個中文字計為 1，導致終端機輸出的表格右邊界完全錯位破裂。</li>
+<li><strong>控制台編碼衝突（CP950 vs UTF-8）</strong>：
+Windows 繁體中文系統終端機預設編碼為 CP950（Big5）。當腳本嘗試印出 Unicode 盒形繪圖字元（<code>┌─┬─┐</code>、<code>├─┼─┤</code>）或狀態圖示（<code>✓</code>、<code>✗</code>）時，會引發 <code>UnicodeEncodeError: 'cp950' codec can't encode character</code> 異常崩潰。</li>
+<li><strong>長字句溢出視窗</strong>：
+例如報價因子修改與總價調整的回覆說明字串長達數十個中英文字元，若單行輸出會大幅超出常見終端機的 100~120 欄寬限制，造成視覺上自動折行引發混亂。</li>
+</ol>
+<h4 id="解決方法與工程克服之道">解決方法與工程克服之道</h4>
+<ol>
+<li><strong>全域 UTF-8 強制重導向</strong>：
+在腳本入口加入 <code>sys.stdout.reconfigure(encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;)</code>，強制讓標準輸出支援 UTF-8 編碼，確保在 Windows 控制台亦能無痛輸出標準 Unicode 表格符號與中文。</li>
+<li><strong>視覺寬度自適應對齊（Visual Length &amp; Visual Padding）</strong>：
+實作自訂函數 <code>vlen()</code> 與 <code>vpad()</code>，使用 <code>unicodedata.east_asian_width()</code> 精準識別字元寬度，將寬字元（'W', 'F'）計為 2，其餘計為 1，確保每個單元格在各終端機上的視覺像素完美齊平：
+<div class="terminal-card">
+  <div class="terminal-bar">
+    <div class="terminal-controls">
+      <span class="term-dot term-red"></span>
+      <span class="term-dot term-yellow"></span>
+      <span class="term-dot term-green"></span>
+    </div>
+    <span class="terminal-title">python - East Asian Width Alignment Helper</span>
+    <span class="terminal-shell">bash / utf-8</span>
+  </div>
+  <div class="terminal-body">
+<pre class="hljs"><code><div><span class="hljs-keyword">def</span> <span class="hljs-title function_">vlen</span>(<span class="hljs-params">s: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">int</span>:
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">sum</span>(<span class="hljs-number">2</span> <span class="hljs-keyword">if</span> unicodedata.east_asian_width(c) <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;F&quot;</span>, <span class="hljs-string">&quot;W&quot;</span>) <span class="hljs-keyword">else</span> <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> s)
+</div></code></pre>
+  </div>
+</div>
+
+</li>
+<li><strong>自適應格內自動折行機制（Auto Line Wrapping）</strong>：
+設計專屬的 <code>wrap_text()</code> 演算法，能同時處理中文單字與英文單詞的邊界分割，自動將過長的單元格內容折成多行，並在每筆資料間加入優雅的橫向分隔線，預設自動啟用，徹底解決在任何視窗大小下的破版困擾。</li>
+</ol>
+<hr>
+<h3 id="73-多輪對話狀態維護與單號上下文繼承session-state-retention">7.3 多輪對話狀態維護與單號上下文繼承（Session State Retention）</h3>
+<h4 id="痛點與挑戰-2">痛點與挑戰</h4>
+<ul>
+<li>在連續對話的情境中（例如 Spec 4.2 第 1 輪「查詢 QT-20260330-001」，第 2 輪查詢客戶清單，第 3 輪輸入「報價因子改 1.5」），第 3 輪指令並未重複給予單號。</li>
+<li>初始設計時，Agent 的意圖分類器僅針對當前 Prompt 分析，若使用者沒有輸入單號，分類器便判定缺少單號，導致工作流錯誤路由至追問節點（<code>clarify</code>），要求使用者再次提供報價單編號，破壞了流暢的人機對話體驗。</li>
+</ul>
+<h4 id="解決方法與工程克服之道-1">解決方法與工程克服之道</h4>
+<ul>
+<li><strong>強化狀態記憶與歷史回溯機制</strong>：
+在 <code>agent/quotation_agent/agent.py</code> 的路由決策與參數補全中，建立了雙層防禦邏輯：
+<ol>
+<li><strong>第一層（Session State 優先）</strong>：檢查 <code>ctx.state.get(&quot;pending_params&quot;)</code> 與暫存的 <code>last_quotation_number</code>。</li>
+<li><strong>第二層（事件歷史正則反查）</strong>：若狀態機中無暫存，逆向掃描整個 Session 事件歷史（<code>ctx.session.events</code>），利用正規表達式 <code>QT-\d{8}-\d{3}</code> 搜尋最近一次成功查詢或操作的報價單號。</li>
+</ol>
+<ul>
+<li>只要歷史中存在有效單號，Agent 即自動繼承該單號執行操作，使連續多輪業務指令順暢銜接。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="74-異質架構資料型別防禦與後端一致性go-backend-type-marshaling">7.4 異質架構資料型別防禦與後端一致性（Go Backend Type Marshaling）</h3>
+<h4 id="痛點與挑戰-3">痛點與挑戰</h4>
+<ul>
+<li>EZStore 採用 Go 語言開發後端 REST API，而 Agent 測試腳本採用 Python 開發。Go 在某些特定結構體（如金額計算或 JSON 欄位）序列化時，將 <code>total_price</code> 以字串或特殊浮點數輸出。</li>
+<li>在早期版本的驗收腳本中，若直接以數值邏輯計算總價逼近差距（如 <code>abs(total - 8000)</code>），會引發 Python 的 <code>TypeError: unsupported operand type(s) for -: 'str' and 'int'</code> 拋錯。</li>
+<li>此外，測試過程中的 Copy-on-Write 會產生新的報價單與訂單 ID，多次重複測試可能導致資料庫狀態偏離初始 seed。</li>
+</ul>
+<h4 id="解決方法與工程克服之道-2">解決方法與工程克服之道</h4>
+<ul>
+<li><strong>防禦性型別解析</strong>：在 Python 腳本端實作防禦性轉換 <code>float(data.get(&quot;total_price&quot;) or 0)</code>，兼顧後端字串或浮點數回傳情境。</li>
+<li><strong>資料庫快速重置機制</strong>：在每次完整 Eval 或展示前，透過 <code>docker exec -i ezstore-db-1 psql -U ezstore -d ezstore -f /scripts/seed-test-data.sql</code> 一鍵重置 12 筆報價單與 10 筆訂單初始狀態，確保驗收環境具備 100% 冪等性（Idempotence）。</li>
+</ul>
+<hr>
+<h2 id="8-總結與未來展望">8. 總結與未來展望</h2>
+<p>本專案完整落實了現代企業級 AI Agent 的三大核心：</p>
+<ol>
+<li><strong>可靠的流程圖控制（Graph Workflow）</strong>：透過明確的意圖分類、程式路由與節點隔離，解決傳統黑盒對話機器人的失控問題，確保商務操作 100% 遵從 Copy-on-Write 審計規範。</li>
+<li><strong>跨領域智能協同（A2A Protocol）</strong>：透過標準協議解耦業務邊界，銷售端與倉儲端各自維持獨立的微服務與狀態機，具備高度橫向擴展潛力。</li>
+<li><strong>政策合規決策能力（OKF）</strong>：將企業營運政策轉化為結構化知識資產，讓 AI 在動態執行時能主動檢驗起訂量、交期與授權門檻，真正達成「合規自治（Compliant Autonomy）」。</li>
+</ol>
+<p>未來可進一步將 OKF 結合向量資料庫（RAG），並擴展更多微服務智能體（如財務對帳 Agent、物流追蹤 Agent），打造全自動化之現代企業智能營運體系。</p>
+
+
+
+<footer class="report-footer">
+  <div>EZStore 雙 Agent 智慧商務系統專案報告書 · 2026</div>
+  <div>Google ADK 2.11 · A2A Protocol · Open Knowledge Fabric</div>
+</footer>
+</div>
+
+<script>
+  // Initialize Mermaid with custom clean theme
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#e0e7ff',
+      primaryTextColor: '#1e1b4b',
+      primaryBorderColor: '#6366f1',
+      lineColor: '#64748b',
+      secondaryColor: '#f1f5f9',
+      tertiaryColor: '#f8fafc',
+      fontFamily: "'Inter', 'Noto Sans TC', sans-serif"
+    },
+    flowchart: {
+      curve: 'basis',
+      padding: 20
+    },
+    sequence: {
+      actorMargin: 40,
+      boxMargin: 10,
+      boxTextMargin: 5,
+      noteMargin: 10,
+      messageMargin: 35
+    }
+  });
+</script>
+
+</body>
+</html>
