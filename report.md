@@ -1,5 +1,6 @@
 # EZStore 雙 Agent 智慧商務系統專案報告書
-**結合 Google ADK Graph Workflow、A2A 跨 Agent 協定與 OKF 領域知識架構**
+**結合 Google ADK Graph Workflow、A2A 跨 Agent 協定與 OKF 領域知識架構**  
+**Github: https://github.com/tshsu224/ezstore/tree/feature/ezstore-agent-develop**
 
 ---
 
