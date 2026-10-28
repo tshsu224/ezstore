@@ -1,5 +1,7 @@
 # EZStore
 
+> 🎓 **作業評審指引**：各項作業規格檢驗對照表、快速驗收指令與完整技術報告請參閱 [**report.html**](report.html)（或 [report.md](report.md)）。
+>
 > 輕量級 B2B 報價與訂單管理系統。
 
 [English](README.md)

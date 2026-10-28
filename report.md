@@ -4,7 +4,90 @@
 
 ---
 
+## <a id="submission-guide"></a>🎓 作業快速導覽 (Submission Guide)
+  
+> 本章節彙整本專案各項作業規格的實作代碼、驗收輸出與檢驗點檔案，方便快速查閱審核。
+
+### 📌 作業要求與實作檔案快速對照表
+
+| 項目 | 核心檔案 / 實作位置 | 說明與檢驗指引 |
+| :--- | :--- | :--- |
+| **完整報告書** | [`report.html`](report.html) / [`report.md`](report.md) | **排版美化之 HTML 報告**（內嵌向量架構圖與截圖）與 Markdown 原始檔。 |
+| **第一個 Agent (Quotation)** | [`agent/quotation_agent/agent.py`](agent/quotation_agent/agent.py) | 基於 **Google ADK Graph Workflow** 的報價與退換貨智慧助理。 |
+| ↳ **檢查點 1 (Dev-UI)** | [`images/checkpoint-1-dev-ui.png`](images/checkpoint-1-dev-ui.png) | ADK Playground 工作流程視覺化截圖。 |
+| ↳ **檢查點 2 (Chat UI)** | [`images/checkpoint-2-chat-ui-1.png`](images/checkpoint-2-chat-ui-1.png)<br>[`images/checkpoint-2-chat-ui-2.png`](images/checkpoint-2-chat-ui-2.png)<br>[`images/checkpoint-2-chat-ui-3.png`](images/checkpoint-2-chat-ui-3.png) | 3 張 EZStore 前台對話畫面（詢價/比價/退貨安全確認）。 |
+| ↳ **檢查點 3 (Guardrails)** | [`images/checkpoint-3-guardrails.png`](images/checkpoint-3-guardrails.png) | Guardrails 安全防護評測成果截圖（越獄防禦）。 |
+| ↳ **檢查點 4 (Actions)** | [`images/checkpoint-4-actions.png`](images/checkpoint-4-actions.png) | Actions 6 大業務動作自動化評估截圖。 |
+| ↳ **檢查點 5 (Spec 4.2 表格)** | [`images/checkpoint-5-spec42-1.png`](images/checkpoint-5-spec42-1.png)<br>[`images/checkpoint-5-spec42-2.png`](images/checkpoint-5-spec42-2.png)<br>[`images/checkpoint-5-spec42-3.png`](images/checkpoint-5-spec42-3.png) | 3 大驗收表格（路由表、系統連結表、對話與回應摘要表）。 |
+| **第二個 Agent (Inventory)** | [`agent/inventory_agent/agent.py`](agent/inventory_agent/agent.py)<br>[`agent/inventory_agent/tools/`](agent/inventory_agent/tools/) | **自主發想應用**：庫存盤點、智慧補貨建議與供應鏈協調 Agent。 |
+| ↳ **第二 Agent 單元測試** | [`agent/inventory_agent/tests/`](agent/inventory_agent/tests/) | 5 項涵蓋安全庫存、供應商政策與簽核機制的單元測試。 |
+| **A2A 跨 Agent 協同應用** | [`agent/quotation_agent/a2a_client.py`](agent/quotation_agent/a2a_client.py)<br>[`agent/quotation_agent/app_utils/a2a.py`](agent/quotation_agent/app_utils/a2a.py) | 符合標準的 A2A JSON 訊息協議與端點通訊實作。 |
+| ↳ **A2A 實時協作展示** | [`scripts/demo_a2a_and_inventory.py`](scripts/demo_a2a_and_inventory.py) | 跨 Agent 即時查詢庫存與建議補貨之協同驗收腳本。 |
+| **OKF 領域知識庫** | [`agent/inventory_agent/okf/kb.py`](agent/inventory_agent/okf/kb.py) | OKF (Open Knowledge Fabric) 領域知識庫查詢引擎。 |
+| ↳ **OKF 知識庫定義檔** | [`agent/inventory_agent/okf/safety_stock_policy.json`](agent/inventory_agent/okf/safety_stock_policy.json)<br>[`agent/inventory_agent/okf/supplier_directory.json`](agent/inventory_agent/okf/supplier_directory.json)<br>[`agent/inventory_agent/okf/approval_governance.json`](agent/inventory_agent/okf/approval_governance.json) | 1. 產品安全庫存規則庫<br>2. 外部供應商目錄 (MOQ/交期)<br>3. 採購階層式簽核矩陣 |
+| **100/100 滿分評測成果** | [`artifacts/grading/20261025_110751/`](artifacts/grading/20261025_110751/) | 最新滿分自動評估報告（含 `report.json`、`report.md` 及 actions/guardrails html）。 |
+| ↳ **對應執行 Trace** | [`agent/artifacts/traces/`](agent/artifacts/traces/) | 評測對應之 3 份 LLM 執行軌跡紀錄檔。 |
+
+### ⚡ 核心功能快速驗收指令 (Quick Run)
+
+若希望在本機環境快速重現各項功能，可使用以下指令：
+
+```bash
+# 1. 執行第二個 Agent 與 OKF 知識庫的 5 項單元測試 (免 API Key)
+pytest agent/inventory_agent/tests
+
+# 2. 模擬跨 Agent A2A 協同對話與 OKF 補貨決策 (免 API Key)
+python scripts/demo_a2a_and_inventory.py
+
+# 3. 繪製 Spec 4.2 終端機 3 大自動換行驗收表格 (讀取快取，免耗費 API Token)
+python scripts/verify_spec42.py --cached
+
+# 4. 啟動完整微服務系統 (前台 http://localhost:3000)
+docker-compose up -d
+```
+
+### 📂 專案目錄樹狀結構導覽
+
+```text
+ezstore/
+├── report.html                      # [主要報告] 精美排版 HTML 技術報告書 (含 Mermaid 向量圖)
+├── report.md                        # [原始報告] Markdown 規格報告書全文
+├── images/                          # [檢驗截圖] 檢查點 1~5 完整截圖 (共 9 張)
+│   ├── checkpoint-1-dev-ui.png      # 檢查點 1: ADK Dev-UI 工作流程圖
+│   ├── checkpoint-2-chat-ui-1.png   # 檢查點 2: 前台對話 (查詢與諮詢)
+│   ├── checkpoint-2-chat-ui-2.png   # 檢查點 2: 前台對話 (比價與表格)
+│   ├── checkpoint-2-chat-ui-3.png   # 檢查點 2: 前台對話 (退貨防護)
+│   ├── checkpoint-3-guardrails.png  # 檢查點 3: Guardrails Eval 安全評測
+│   ├── checkpoint-4-actions.png     # 檢查點 4: Actions Eval 評測
+│   ├── checkpoint-5-spec42-1.png    # 檢查點 5: 驗收表 1 (路由與參數)
+│   ├── checkpoint-5-spec42-2.png    # 檢查點 5: 驗收表 2 (系統連結)
+│   └── checkpoint-5-spec42-3.png    # 檢查點 5: 驗收表 3 (對話與回應)
+├── agent/                           # [雙 Agent 核心目錄]
+│   ├── quotation_agent/             # 第一個 Agent: 報價與退換貨智慧助理
+│   │   ├── agent.py                 # ADK Graph Workflow 狀態機核心
+│   │   ├── a2a_client.py            # A2A 跨 Agent 溝通客戶端
+│   │   └── app_utils/               # 輔助函式與 A2A 訊息封裝
+│   ├── inventory_agent/             # 第二個 Agent: 庫存管理與供應鏈 Agent
+│   │   ├── agent.py                 # 庫存 Agent 實作
+│   │   ├── tools/                   # 庫存查詢與補貨計算工具
+│   │   ├── tests/                   # 庫存 Agent 與 OKF 單元測試
+│   │   └── okf/                     # OKF 領域知識架構 (3 大 JSON 知識庫與查詢引擎)
+│   ├── tests/eval/                  # 官方與自訂 Eval 評測套件與資料集
+│   └── artifacts/traces/            # 100 分評測對應之 3 份 Agent 執行軌跡
+├── artifacts/grading/20261025_110751/  # [最新滿分評測成果] 100/100 評估報告 (JSON & HTML)
+├── backend/                         # Go 語言後端商業邏輯與 REST API
+├── frontend/                        # Vue 3 現代化 Chat UI 前端介面
+├── mcp_server/                      # MCP Server (提供報價與折扣 Copy-on-Write 工具)
+└── scripts/                         # 評測與自動化驗收腳本
+    ├── verify_spec42.py             # 檢查點 5 專用: Spec 4.2 3 大表格生成器
+    ├── demo_a2a_and_inventory.py    # A2A 與 OKF 跨系統展示腳本
+    └── beautify_report.py           # HTML 報告美化渲染引擎
+```
+
+---
+
 ## 目錄
+0. [作業快速導覽 (Submission Guide)](#submission-guide)
 1. [專案背景與整體架構概述](#1-專案背景與整體架構概述)
 2. [第一個 Agent：報價單管理 Agent (Quotation Agent)](#2-第一個-agent報價單管理-agent-quotation-agent)
    - 2.1 實作目的與業務價值
@@ -31,13 +114,13 @@
 6. [系統部署、操作與使用指南](#6-系統部署操作與使用指南)
    - 6.1 環境需求與安裝
    - 6.2 Docker Compose 一鍵啟動
-   - 6.3 驗收腳本與命令清單
+   - 6.3 驗收腳本與命令集
 7. [實作挑戰、技術困難與解決方案](#7-實作挑戰技術困難與解決方案)
-   - 7.1 API 用量限制與評估節流策略（Gemini API Quota & Caching）
-   - 7.2 Windows 環境與終端機排版相容性（East Asian Width 與 UTF-8）
-   - 7.3 多輪對話狀態維護與單號上下文繼承（Session State Retention）
-   - 7.4 異質架構資料型別防禦與後端一致性（Go Backend Type Marshaling）
-8. [總結與未來展望](#8-總結與未來展望)
+   - 7.1 API 配額與快取策略 (Gemini API Quota & Caching)
+   - 7.2 Windows 環境與終端機製表相容性 (East Asian Width 與 UTF-8)
+   - 7.3 多輪狀態持久化與單號上下文承接 (Session State Retention)
+   - 7.4 結構化資料格式與強型別一致性 (Go Backend Type Marshaling)
+8. [結論與未來展望](#8-結論與未來展望)
 
 ---
 
@@ -417,7 +500,7 @@ docker compose ps
 - MCP Server：`http://localhost:8010/mcp`
 - Quotation Agent：`http://localhost:8080/agent-api/`
 
-### 6.3 驗收腳本與命令清單
+### 6.3 驗收腳本與命令集
 
 | 檢驗目標 | 執行指令 | 說明 |
 |---|---|---|
@@ -434,7 +517,7 @@ docker compose ps
 
 在開發與整合本專案的過程中，團隊面臨了諸多跨領域的工程挑戰。以下詳細記錄主要遭遇之痛點、根本原因以及相應的克服與解決方案：
 
-### 7.1 API 用量限制與評估節流策略（Gemini API Quota & Caching）
+### 7.1 API 配額與快取策略 (Gemini API Quota & Caching)
 
 #### 痛點與挑戰
 1. **高頻 LLM-as-judge 評估觸發配額耗盡**：
@@ -455,7 +538,7 @@ docker compose ps
 
 ---
 
-### 7.2 Windows 環境與終端機排版相容性（East Asian Width 與 UTF-8）
+### 7.2 Windows 環境與終端機製表相容性 (East Asian Width 與 UTF-8)
 
 #### 痛點與挑戰
 1. **中文字寬破版（CJK Width Problem）**：
@@ -479,7 +562,7 @@ docker compose ps
 
 ---
 
-### 7.3 多輪對話狀態維護與單號上下文繼承（Session State Retention）
+### 7.3 多輪狀態持久化與單號上下文承接 (Session State Retention)
 
 #### 痛點與挑戰
 - 在連續對話的情境中（例如 Spec 4.2 第 1 輪「查詢 QT-20260330-001」，第 2 輪查詢客戶清單，第 3 輪輸入「報價因子改 1.5」），第 3 輪指令並未重複給予單號。
@@ -494,7 +577,7 @@ docker compose ps
 
 ---
 
-### 7.4 異質架構資料型別防禦與後端一致性（Go Backend Type Marshaling）
+### 7.4 結構化資料格式與強型別一致性 (Go Backend Type Marshaling)
 
 #### 痛點與挑戰
 - EZStore 採用 Go 語言開發後端 REST API，而 Agent 測試腳本採用 Python 開發。Go 在某些特定結構體（如金額計算或 JSON 欄位）序列化時，將 `total_price` 以字串或特殊浮點數輸出。
@@ -507,7 +590,7 @@ docker compose ps
 
 ---
 
-## 8. 總結與未來展望
+## 8. 結論與未來展望
 
 本專案完整落實了現代企業級 AI Agent 的三大核心：
 1. **可靠的流程圖控制（Graph Workflow）**：透過明確的意圖分類、程式路由與節點隔離，解決傳統黑盒對話機器人的失控問題，確保商務操作 100% 遵從 Copy-on-Write 審計規範。
