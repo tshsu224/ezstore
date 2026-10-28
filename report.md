@@ -153,7 +153,7 @@ MCP Server 提供 6 大封裝工具：
      - 助理回覆：客戶「史塔克工業股份有限公司」的報價單清單（共 1 筆）：`- QT-20260115-001 | 總價: 253500 | 狀態: published | 連結: http://localhost:3000/quotations/1`。
   3. **修改報價因子（Copy-on-Write）**：
      - 使用者：「`我要修改報價單報價因子，報價單編號：QT-20260330-001，報價因子改為 1.5`」
-     - 助理回覆：明確告知「已成功修改報價因子。原始報價單: QT-20260330-001 (未修改) — http://localhost:3000/quotations/12」，並產生新報價單 `QT-20261027-001`，總價變更為 9750，附上新單系統連結 `http://localhost:3000/quotations/13`。
+     - 助理回覆：明確告知「已成功修改報價因子。原始報價單: QT-20260330-001 (未修改) — http://localhost:3000/quotations/12 」，並產生新報價單 `QT-20261027-001`，總價變更為 9750，附上新單系統連結 `http://localhost:3000/quotations/13`。
 - **截圖畫面**：
   
   ![檢查點 2-1：Chat UI 查詢與因子修改](images/checkpoint-2-chat-ui-1.png)
@@ -163,7 +163,7 @@ MCP Server 提供 6 大封裝工具：
 - **實際對話順序與內容**：
   1. **複製報價單**：
      - 使用者：「`我要複製報價單，報價單編號：QT-20260330-001`」
-     - 助理回覆：明確告知「已成功複製報價單。原始報價單: QT-20260330-001 — http://localhost:3000/quotations/12」，產出獨立的新複製報價單 `QT-20261027-002`，系統連結 `http://localhost:3000/quotations/14`。
+     - 助理回覆：明確告知「已成功複製報價單。原始報價單: QT-20260330-001 — http://localhost:3000/quotations/12 」，產出獨立的新複製報價單 `QT-20261027-002`，系統連結 `http://localhost:3000/quotations/14`。
   2. **離題拒答 Guardrails**：
      - 使用者：「`今天天氣如何？`」
      - 助理回覆：禮貌拒絕並清楚陳列 Agent 支援的 6 項報價單業務範疇：「抱歉，我只能協助處理報價單相關的操作（例如查詢報價單、查詢客戶報價單、修改報價因子、調整總價、轉訂單、複製報價單等）。無法處理天氣、閒聊或客戶與產品新增修改等其他需求。」（程式邏輯拒答，未調用任何 MCP 節點）。
@@ -441,16 +441,16 @@ docker compose ps
 2. **429 ResourceExhausted 錯誤**：
    在密集測試或批次評測情境下，短時間內發送的大量 Prompt 與評審請求迅速觸發了 Google AI Studio 免費額度下的 **RPM（Requests Per Minute）與 TPM（Tokens Per Minute）** 上限，拋出 `429 ResourceExhausted: Resource has been exhausted` 異常，導致測試中斷、無法順利產出完整的評鑑報告。
 
-#### 解決方法與工程克服之道
+#### 解決方法與克服之道
 1. **完整測試先行，留存標準評鑑結果（Run-Once & Cache Principle）**：
-   團隊在開發初期與核心架構完成時，已於乾淨資料庫環境下完整執行過官方定義的全套測試腳本（包括 32 項 `pytest` 單元與整合測試、完整的 `agents-cli eval run` 與課堂標準 `grade_agent.py`），確認 6 大操作與 3 項 Guardrails 評鑑皆全數獲得滿分（5.00 / 1.00 / 1.00），並將標準執行結果完整儲存於 `artifacts/grading/` 目錄中。
+   在核心架構完成時，已於乾淨資料庫環境下完整執行過全套測試腳本（包括 32 項 `pytest` 單元與整合測試、完整的 `agents-cli eval run` 與課堂標準 `grade_agent.py`），確認 6 大操作與 3 項 Guardrails 評鑑皆全數獲得滿分（5.00 / 1.00 / 1.00），並將標準執行結果完整儲存於 `artifacts/grading/` 目錄中。
 2. **輕量化 3 大表格驗收腳本的誕生（API 節約專用解方）**：
-   為了在後續調校排版、排版驗證或向教師與助教展示成果時，**避免重複耗費昂貴的 API 用量並防止撞到配額上限**，我們特別抽離並實作了專屬的輕量化驗收工具 `scripts/verify_spec42.py` 與成績解析器 `scripts/eval_summary.py`：
+   為了在後續調校排版、排版驗證或展示成果時，**避免重複耗費昂貴的 API 用量並防止撞到配額上限**，特別抽離並實作了輕量化驗收工具 `scripts/verify_spec42.py` 與成績解析器 `scripts/eval_summary.py`：
    - **單一 Session 聚焦驗收**：只需 9 句對話即可涵蓋 4.2 節規範的所有功能路徑，大幅精簡不必要的冗餘評測回合。
    - **支援 `--cached` / `--mock` 免配額重放模式**：直接載入預置的標準對話回覆結構，無需每一次調整文字邊距都要呼叫外部 LLM API。
    - **直連後端資料庫驗證 Copy-on-Write**：腳本核心特色在於直接連線本機後端 REST API（`http://localhost:8080/api/v1`），查驗 PostgreSQL 資料庫中的原報價單總價、複製單單號與新建立的訂單狀態，以「0 額外 API Token 消耗」達成與全量測試相同的排版與後端審計查驗效果，兼顧了工程嚴謹性與雲端資源的最佳化節流。
 3. **意圖分類輸出 Token 最小化**：
-   在 `classify_intent` 節點中，我們嚴格限制 Gemini 3.8 Flash 僅輸出簡短的強型別 Pydantic JSON，將後續的工具呼叫與參數組裝全數交由純 Python 程式處理，避免 LLM 生成冗長的自由文本，大幅降低每次請求的 Output Token 消耗。
+   在 `classify_intent` 節點中，嚴格限制 Gemini 3.8 Flash 僅輸出簡短的強型別 Pydantic JSON，將後續的工具呼叫與參數組裝全數交由純 Python 程式處理，避免 LLM 生成冗長的自由文本，大幅降低每次請求的 Output Token 消耗。
 
 ---
 
