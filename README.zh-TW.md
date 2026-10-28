@@ -268,12 +268,12 @@ EZStore 內建自然語言報價單管理助手，以 Google ADK 2.x 開發。Ag
 
 Workflow 圖（agent/quotation_agent/agent.py）：
 
-  START → load_context → classify_intent（LLM，output_schema=Intent）→ route
-            ├─ get_quotation / list_customer_quotations / duplicate_quotation
-            ├─ update_pricing_factor / adjust_total_price / convert_to_order    ← 各呼叫一個 MCP 工具
-            ├─ clarify    （缺欄位就追問，並把意圖暫存在 state.pending_intent）
-            └─ off_topic  （固定拒答，由程式決定）
-          全部 → respond  （輸出文字、更新 state.chat_history）
+  START → classify_intent（LLM，output_schema=IntentClassification）→ route_intent
+            ├─ node_get_quotation / node_list_customer_quotations / node_duplicate_quotation
+            ├─ node_update_pricing_factor / node_adjust_total_price / node_convert_to_order    ← 各呼叫一個 MCP 工具
+            ├─ clarify_node     （缺欄位就追問，並把意圖暫存在 state.pending_action）
+            └─ refuse_node      （固定拒答，由程式決定）
+          全部 → respond        （輸出 types.Content，附純文字系統連結）
 ```
 
 每一則使用者訊息都會從 `START` 重新跑一次圖；跨回合的記憶放在 session state（`chat_history`、`pending_intent`），所以使用者可以在下一句補上被追問的資料。
@@ -295,6 +295,15 @@ Workflow 圖（agent/quotation_agent/agent.py）：
 - 離題請求 **由程式拒答**，缺少必要欄位時 **追問一輪**
 - 沒有 API key 時 Agent 仍會啟動（對話回傳清楚錯誤），`docker compose up` 不會因缺金鑰而失敗
 
+**環境變數：**
+
+| 變數名稱 | 說明 | 預設值 |
+|---|---|---|
+| GEMINI_API_KEY | Google AI Studio API key | - |
+| AGENT_MODEL | Gemini 模型名稱 | gemini-3.8-flash |
+| MCP_URL | MCP Server Streamable HTTP 端點 | http://mcp-server:8000/mcp（Docker）/ http://localhost:8010/mcp（本機） |
+| OTEL_TO_CLOUD | 是否將 Telemetry 匯出至 Google Cloud | alse |
+
 **本機開發：**
 
 ```bash
@@ -314,6 +323,9 @@ uv run pytest tests/unit -q                                            # 不需 
 MCP_URL=http://localhost:8010/mcp uv run pytest tests/integration -q   # 離線圖測試（有金鑰時一併跑 LLM 測試）
 agents-cli eval run --dataset tests/eval/datasets/quotation-actions.json     # 6 個操作案例（會新增資料，重跑前重灌 seed）
 agents-cli eval run --dataset tests/eval/datasets/quotation-guardrails.json  # 2 個拒答 + 1 個多輪追問
+
+# 自動驗收評分（執行 actions、guardrails、extra 題庫與後端資料庫驗證）
+python scripts/grading/grade_agent.py --suite scripts/grading/student-suite.json
 ```
 
 學員用的可信賴度評鑑 LAB：課堂版 [eval-lab-quick.zh-TW.md](eval-lab-quick.zh-TW.md)（25 分鐘）、完整版 [eval-lab.zh-TW.md](eval-lab.zh-TW.md)（60–90 分鐘，回家做）。

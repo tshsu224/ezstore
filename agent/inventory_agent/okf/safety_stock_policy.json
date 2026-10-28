@@ -1,0 +1,30 @@
+{
+  "$schema": "https://okf.org/schemas/v1/safety_stock_policy.json",
+  "name": "EZStore Inventory Safety Stock & Replenishment Policies",
+  "version": "1.0.0",
+  "default_safety_stock_units": 10,
+  "category_policies": [
+    {
+      "category": "辦公用紙",
+      "minimum_stock_threshold": 15,
+      "reorder_point_formula": "daily_demand * lead_time + 10",
+      "stockout_risk_level": "HIGH",
+      "notes": "辦公用紙為高週轉核心商品，庫存不得低於 15 箱"
+    },
+    {
+      "category": "電子周邊",
+      "minimum_stock_threshold": 5,
+      "reorder_point_formula": "daily_demand * lead_time + 3",
+      "stockout_risk_level": "MEDIUM",
+      "notes": "高單價商品，避免過度積壓庫存"
+    },
+    {
+      "category": "包裝耗材",
+      "minimum_stock_threshold": 30,
+      "reorder_point_formula": "daily_demand * lead_time + 20",
+      "stockout_risk_level": "LOW",
+      "notes": "體積大但單價低，常態批次回補"
+    }
+  ]
+}
+

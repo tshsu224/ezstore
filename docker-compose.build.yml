@@ -20,3 +20,8 @@ services:
     build:
       context: ./frontend
       dockerfile: e2e/Dockerfile
+
+  agent:
+    image: ezstore-agent:local
+    pull_policy: never
+    build: ./agent

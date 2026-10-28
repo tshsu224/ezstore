@@ -268,12 +268,12 @@ User → React Chat UI → nginx /agent-api → Agent (ADK FastAPI, port 8080) �
 
 Workflow graph (agent/quotation_agent/agent.py):
 
-  START → load_context → classify_intent (LLM, output_schema=Intent) → route
-            ├─ get_quotation / list_customer_quotations / duplicate_quotation
-            ├─ update_pricing_factor / adjust_total_price / convert_to_order    ← each calls one MCP tool
-            ├─ clarify     (missing fields → ask, keep state.pending_intent)
-            └─ off_topic   (fixed refusal, decided by code)
-          all → respond    (emit text + update state.chat_history)
+  START → classify_intent (LLM, output_schema=IntentClassification) → route_intent
+            ├─ node_get_quotation / node_list_customer_quotations / node_duplicate_quotation
+            ├─ node_update_pricing_factor / node_adjust_total_price / node_convert_to_order    ← each calls one MCP tool
+            ├─ clarify_node     (missing fields → ask, keep state.pending_action)
+            └─ refuse_node      (fixed refusal, decided by code)
+          all → respond         (emit types.Content with plain text link)
 ```
 
 Every user message re-runs the graph from `START`; cross-turn memory lives in session state (`chat_history`, `pending_intent`), so a user can answer a clarification question in the next message.
@@ -295,6 +295,15 @@ Every user message re-runs the graph from `START`; cross-turn memory lives in se
 - Off-topic requests are **refused by code**, missing fields trigger a **clarification turn**
 - Agent runs even without an API key (chat returns a clear error), so `docker compose up` never fails on a missing key
 
+**Environment Variables:**
+
+| Variable | Description | Default |
+|---|---|---|
+| GEMINI_API_KEY | Google AI Studio API key | - |
+| AGENT_MODEL | Gemini model name | gemini-3.8-flash |
+| MCP_URL | MCP Server Streamable HTTP endpoint | http://mcp-server:8000/mcp (docker) / http://localhost:8010/mcp (local) |
+| OTEL_TO_CLOUD | Whether to export telemetry to Google Cloud | alse |
+
 **Local development:**
 
 ```bash
@@ -314,6 +323,9 @@ uv run pytest tests/unit -q                       # no LLM, no MCP
 MCP_URL=http://localhost:8010/mcp uv run pytest tests/integration -q   # offline graph tests (+ LLM tests when key is set)
 agents-cli eval run --dataset tests/eval/datasets/quotation-actions.json    # 6 action cases (creates data; reseed before rerun)
 agents-cli eval run --dataset tests/eval/datasets/quotation-guardrails.json # 2 refusals + 1 multi-turn clarification
+
+# Automated grading (runs actions, guardrails, extra cases, and backend DB verification)
+python scripts/grading/grade_agent.py --suite scripts/grading/student-suite.json
 ```
 
 Trustworthiness evaluation labs for learners: [eval-lab-quick.md](eval-lab-quick.md) (25 min, in class) and [eval-lab.md](eval-lab.md) (60–90 min, full version).

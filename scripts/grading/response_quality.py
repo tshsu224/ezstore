@@ -2,6 +2,7 @@
 
 import os
 import threading
+import time
 
 from google import genai
 from google.genai import types
@@ -42,6 +43,10 @@ def evaluate(instance):
             " The response should agree with the expected answer below; penalize "
             "factual disagreement with it."
         )
+    rubric += (
+        " Note that system policy requires all links to be plain text URLs (http://...) and "
+        "strictly forbids Markdown link syntax [text](url) even if requested by user. Do not penalize plain text links."
+    )
     prompt = (
         f"You are an expert QA evaluator for an enterprise AI assistant. {rubric}\n"
         f"User Prompt: {instance.get('prompt', '')}\n"
@@ -51,16 +56,28 @@ def evaluate(instance):
         prompt += f"Expected Answer (ground truth): {reference}\n"
     prompt += f"Full Agent Trace: {instance.get('agent_data', '')}\n"
 
-    response = _client().models.generate_content(
-        model=os.environ.get("AGENT_MODEL", "gemini-3.8-flash"),
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0,  # deterministic grading
-            response_mime_type="application/json",
-            response_schema=_Verdict,  # guaranteed schema-valid JSON
-        ),
-    )
-    verdict = response.parsed
+    verdict = None
+    response = None
+    for attempt in range(6):
+        try:
+            response = _client().models.generate_content(
+                model=os.environ.get("AGENT_MODEL", "gemini-3.8-flash"),
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0,  # deterministic grading
+                    response_mime_type="application/json",
+                    response_schema=_Verdict,  # guaranteed schema-valid JSON
+                ),
+            )
+            verdict = response.parsed
+            break
+        except Exception as e:
+            err = str(e)
+            if ("429" in err or "RESOURCE_EXHAUSTED" in err or "quota" in err.lower()) and attempt < 5:
+                time.sleep(3 * (attempt + 1))
+                continue
+            raise
+
     if verdict is None:  # model returned nothing usable
-        return {"score": 0, "explanation": response.text or ""}
+        return {"score": 0, "explanation": getattr(response, "text", "") or ""}
     return {"score": max(1, min(5, verdict.score)), "explanation": verdict.explanation}

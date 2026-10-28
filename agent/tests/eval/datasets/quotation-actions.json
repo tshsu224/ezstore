@@ -1,0 +1,82 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "get_quotation",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要查詢報價單，報價單編號：QT-20260330-001"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "回覆報價單 QT-20260330-001 的詳細內容與品項，包含純文字系統連結 http://localhost:3000/quotations/12。"}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "list_customer_quotations",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要查詢客戶的報價單清單，客戶名稱：史塔克工業"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "列出史塔克工業的所有報價單（包含 QT-20260115-001）與各自的純文字系統連結。"}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "duplicate_quotation",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要複製報價單，報價單編號：QT-20260330-001"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "回覆複製成功，顯示新報價單編號與原始報價單編號 QT-20260330-001，附上純文字系統連結。"}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "update_pricing_factor",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要修改報價單報價因子，報價單編號：QT-20260330-001，報價因子改為 1.5"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "說明原始報價單未修改，顯示新報價單編號、報價因子 1.5 與新總價，附上純文字系統連結。"}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "adjust_total_price",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要修改報價單總價，報價單編號：QT-20260330-001，總價改為 8000"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "說明原始報價單未修改，以二分法逼近目標總價，顯示實際總價與新報價單編號，附上純文字系統連結。"}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "convert_to_order",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "我要將報價單轉訂單，報價單編號：QT-20260330-001"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "顯示已成功建立訂單，包含訂單編號 ORD-...、總價以及 /orders/... 的純文字系統連結。"}]
+        }
+      }
+    }
+  ]
+}

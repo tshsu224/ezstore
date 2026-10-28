@@ -47,6 +47,19 @@ services:
       backend:
         condition: service_started
 
+  agent:
+    image: ezstore-agent:local
+    environment:
+      MCP_URL: http://mcp-server:8000/mcp
+      AGENT_MODEL: ${AGENT_MODEL:-gemini-3.8-flash}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GOOGLE_GENAI_USE_VERTEXAI: ${GOOGLE_GENAI_USE_VERTEXAI:-}
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT:-}
+      GOOGLE_CLOUD_LOCATION: ${GOOGLE_CLOUD_LOCATION:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      ALLOW_ORIGINS: ${ALLOW_ORIGINS:-http://localhost:3000}
+    depends_on:
+      - mcp-server
 
   frontend:
     image: ghcr.io/cshliu77/ezstore/frontend:latest
@@ -56,6 +69,7 @@ services:
     depends_on:
       - backend
       - mcp-server
+      - agent
 
   e2e:
     image: ghcr.io/cshliu77/ezstore/e2e:latest

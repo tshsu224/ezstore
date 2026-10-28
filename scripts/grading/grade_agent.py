@@ -29,6 +29,13 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 DEFAULT_METRIC_WEIGHTS = {
     "link_present": 1.0,
     "refusal_or_action": 1.0,
@@ -236,8 +243,17 @@ def run_eval(agent_dir: Path, dataset: Path, config: Path, output: Path) -> tupl
         "--config", str(config),
         "--output", str(output),
     ]
-    proc = subprocess.run(cmd, cwd=agent_dir, capture_output=True, text=True)
-    tail = "\n".join((proc.stdout + "\n" + proc.stderr).strip().splitlines()[-30:])
+    proc = subprocess.run(
+    cmd,
+    cwd=agent_dir,
+    capture_output=True,
+    text=True,
+    encoding="utf-8",
+    errors="replace",
+    )
+    stdout = proc.stdout or ""
+    stderr = proc.stderr or ""
+    tail = "\n".join((stdout + "\n" + stderr).strip().splitlines()[-30:])
     return proc.returncode == 0, tail
 
 
@@ -344,7 +360,7 @@ def preflight(repo: Path, agent_dir: Path, backend: Backend, mcp_url: str) -> li
 def reseed(repo: Path) -> bool:
     proc = subprocess.run(
         ["docker", "compose", "exec", "-T", "db", "psql", "-U", "ezstore", "-f", "/scripts/seed-test-data.sql"],
-        cwd=repo, capture_output=True, text=True,
+        cwd=repo, capture_output=True, text=True, encoding="utf-8", errors="replace",
     )
     return proc.returncode == 0
 

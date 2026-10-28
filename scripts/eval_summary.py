@@ -4,6 +4,7 @@
     python3 ../scripts/eval_summary.py artifacts/grade_results/guardrails/results_A.json   # 在 agent/ 目錄下
     python3 ../scripts/eval_summary.py results_A.json results_B.json      # 並列兩次結果，差異標 *
     python3 ../scripts/eval_summary.py results_A.json --explain           # 連評審理由一起印
+    python3 ../scripts/eval_summary.py results_A.json --table             # 印出檢查點標準方框表格與 Average
 
 不需要任何 GCP 或 API key，也不需要 uv 環境，純 Python 標準庫讀 JSON。
 """
@@ -13,6 +14,14 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+
+# 確保 Windows cp950 控制台可正確輸出 UTF-8 字元
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 
 def load(path: str) -> dict:
@@ -59,8 +68,50 @@ def fmt(v) -> str:
     return f"{v:g}" if isinstance(v, (int, float)) else str(v)
 
 
+def print_box_table(ids: list[str], metrics: list[str], base_scores: dict, summary_metrics: list[dict]):
+    col_widths = {
+        "eval_case_id": max(len("eval_case_id"), max(len(i) for i in ids)) + 2
+    }
+    for m in metrics:
+        col_widths[m] = max(len(m), 6) + 2
+
+    # 頂框
+    top = "┌" + "┬".join("─" * col_widths[k] for k in ["eval_case_id"] + metrics) + "┐"
+    header = "│ " + " │ ".join(["eval_case_id".ljust(col_widths["eval_case_id"] - 2)] + [m.ljust(col_widths[m] - 2) for m in metrics]) + " │"
+    mid = "├" + "┼".join("─" * col_widths[k] for k in ["eval_case_id"] + metrics) + "┤"
+    bot = "└" + "┴".join("─" * col_widths[k] for k in ["eval_case_id"] + metrics) + "┘"
+
+    print(top)
+    print(header)
+    print(mid)
+
+    metric_sums = {m: [] for m in metrics}
+    for idx, cid in enumerate(ids):
+        cells = [cid.ljust(col_widths["eval_case_id"] - 2)]
+        for m in metrics:
+            val = (base_scores.get(idx, {}).get(m) or {}).get("score")
+            if isinstance(val, (int, float)):
+                metric_sums[m].append(val)
+            cells.append(fmt(val).ljust(col_widths[m] - 2))
+        print("│ " + " │ ".join(cells) + " │")
+
+    # Average 行
+    print(mid)
+    avg_cells = ["Average".ljust(col_widths["eval_case_id"] - 2)]
+    summary_map = {s["metric_name"]: s.get("mean_score") for s in summary_metrics}
+    for m in metrics:
+        avg = summary_map.get(m)
+        if avg is None and metric_sums[m]:
+            avg = sum(metric_sums[m]) / len(metric_sums[m])
+        avg_str = f"{avg:.2f}" if avg is not None else "ERR"
+        avg_cells.append(avg_str.ljust(col_widths[m] - 2))
+    print("│ " + " │ ".join(avg_cells) + " │")
+    print(bot)
+
+
 def main(argv: list[str]) -> int:
     explain = "--explain" in argv
+    box_table = "--table" in argv
     files = [a for a in argv if not a.startswith("--")]
     if any(not f.endswith(".json") for f in files):
         print("請給 results_*.json 檔（不是 .html）")
@@ -74,6 +125,11 @@ def main(argv: list[str]) -> int:
     base_scores = scores(base)
     metrics = metric_order(base, {m for ms in base_scores.values() for m in ms})
     cand_scores = scores(load(files[1])) if len(files) == 2 else None
+
+    # 如果有 --table 且只有一個檔案，印出漂亮方框表格
+    if box_table and cand_scores is None:
+        print_box_table(ids, metrics, base_scores, base.get("summary_metrics", []))
+        return 0
 
     name_w = max([len(i) for i in ids] + [8]) + 2
     col_w = max([len(m) for m in metrics] + [12]) + 2

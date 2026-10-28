@@ -1,0 +1,31 @@
+{
+  "$schema": "https://okf.org/schemas/v1/approval_governance.json",
+  "name": "EZStore Procurement Spending & Approval Governance",
+  "version": "1.0.0",
+  "tiers": [
+    {
+      "tier": "TIER_1_AUTO",
+      "max_amount": 10000,
+      "approver": "倉庫管理員 / Agent 自動審批",
+      "requires_human_approval": false,
+      "description": "金額 10,000 元以內：Agent 可自動產出採購單並排程入庫"
+    },
+    {
+      "tier": "TIER_2_MANAGER",
+      "min_amount": 10001,
+      "max_amount": 50000,
+      "approver": "採購部門經理",
+      "requires_human_approval": true,
+      "description": "金額 10,001 至 50,000 元：需採購主管線上簽核"
+    },
+    {
+      "tier": "TIER_3_EXECUTIVE",
+      "min_amount": 50001,
+      "max_amount": null,
+      "approver": "財務長 (CFO) / 營運副總",
+      "requires_human_approval": true,
+      "description": "金額超過 50,000 元：需財務長及高階管理層專案審核"
+    }
+  ]
+}
+

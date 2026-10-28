@@ -1,0 +1,22 @@
+# EZStore Agent 評估指標設定（支援 AI Studio 本機評分）
+metrics_to_run:
+  - custom_response_quality
+  - link_present
+  - refusal_or_action
+  - agent_turn_count
+
+custom_metrics:
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+
+  - name: link_present
+    custom_function_file: link_presence.py
+
+  - name: refusal_or_action
+    custom_function_file: refusal_or_action.py
+
+  - name: agent_turn_count
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+          return {'score': len(turns)}
